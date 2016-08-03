@@ -5,11 +5,14 @@ import yaml
 import wget
 from argparse import ArgumentParser
 
-def download(f, out):
+def download(f, out, update=False):
     path = out+"/"+os.path.basename(f)
     if os.path.exists(path):
-        print " File", path, "already exist. Pass!"
-        return
+        if update:
+            os.remove(path)
+        else:
+            print " File", path, "already exist. Pass!"
+            return
     print " - %s -> %s" % (f, out)
     wget.download(f, out=path)
     print ""
@@ -19,6 +22,8 @@ if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("--outdir",
                         help="Output directory in where to put the dust maps")
+    parser.add_argument("--update", action='store_true', default=False,
+                        help="Update the maps.yaml file")
     args = parser.parse_args()
 
     if args.outdir is not None:
@@ -38,7 +43,7 @@ if __name__ == "__main__":
 
     m = "https://raw.githubusercontent.com/nicolaschotard/Extinction/master/maps/maps.yaml"
     print "INFO: downloading the map list from the github repository\n"
-    download(m, outdir)
+    download(m, outdir, update=args.update)
     maps = yaml.load(open(outdir+"/maps.yaml"))
     print "\nINFO: Downloading the following maps:"
     for i, m in enumerate(sorted(maps)):
