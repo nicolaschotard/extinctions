@@ -5,6 +5,15 @@ import yaml
 import wget
 from argparse import ArgumentParser
 
+def download(f, out):
+    path = out+"/"+os.path.basename(f)
+    if os.path.exists(path):
+        print " File", path, "already exist. Pass!"
+        return
+    print " - %s -> %s" % (f, out)
+    wget.download(f, out=path)
+    print ""
+
 if __name__ == "__main__":
 
     parser = ArgumentParser()
@@ -24,7 +33,16 @@ if __name__ == "__main__":
     if not os.path.isdir(outdir):
         print "INFO: Creating output directoy:", outdir
         os.makedirs(outdir)
+    else:
+        print "INFO: output directory used is", outdir
 
-    print "INFO: downloading the map list from the github repository"
-    
-    maps = yaml.load(open('maps.yaml'))
+    m = "https://raw.githubusercontent.com/nicolaschotard/Extinction/master/maps/maps.yaml"
+    print "INFO: downloading the map list from the github repository\n"
+    download(m, outdir)
+    maps = yaml.load(open(outdir+"/maps.yaml"))
+    print "\nINFO: Downloading the following maps:"
+    for i, m in enumerate(sorted(maps)):
+        print "       %i: %s" % (i, m)
+    print
+    for m in sorted(maps):
+        download(maps[m], outdir)
