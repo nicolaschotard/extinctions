@@ -8,9 +8,8 @@ from astropy.coordinates import SkyCoord
 from ToolBox.Astro import Fetchers
 from astroquery.irsa_dust import IrsaDust
 from sncosmo import dustmap
-
-def test():
-    print "test"
+import lsst.afw.geom as afwGeom
+from Extinction import extinction
 
 def load_map(map=0):
     """
@@ -54,7 +53,7 @@ def plot_map(map=0):
     healpy.graticule()
     #healpy.gnomview(map, rot=[0,0.3], title='GnomView', unit='mK', format='%.2g')
 
-def get_value(ra, dec, map=0):
+def test_ebm(ra, dec, map=0):
     """
     Make some tests
     """
@@ -65,15 +64,30 @@ def get_value(ra, dec, map=0):
     # Convert to galactic coordinates.
     l = coordinates.galactic.l.degree
     b = coordinates.galactic.b.degree
+    theta = (90.-b)*numpy.pi/180.
+    phi = l*numpy.pi/180.
     print "l, b = %.3f, %.3f" % (l, b)
+    print "theta, phi = %.3f, %.3f" % (theta, phi)
     m = load_map(map)
-    ebv = healpy.get_interp_val(m,  (90.-b)*numpy.pi/180., l*numpy.pi/180.)
+
+    # from this code
+    ebv = healpy.get_interp_val(m, theta, phi)
+
+    # from astroquery
     t = IrsaDust.get_extinction_table('%.4f %.4f' % (ra, dec))
     if map in [0, 2, 3]:
         t = t[9]['A_SFD'] / t[9]['A_over_E_B_V_SFD']
     else:
         t = t[9]['A_SandF'] / t[9]['A_over_E_B_V_SandF']
         print t
+
+    # from SNf code (ned)
     f = Fetchers.sfd_ebmv(ra, dec)
+
+    # from sncosmo
     sn = dustmap.get_ebv_from_map([ra, dec], mapdir='/home/chotard/.extinction/maps/')
-    print ebv, t, f, sn
+
+    # from other query
+    ebv_sfd = extinction.query(ra, dec, coordsys='equ', mode='sfd')['EBV_SFD']
+    
+    return ebv, t, f, sn, ebv_sfd
