@@ -34,11 +34,8 @@ class PyTest(TestCommand):
 # Package name
 name = 'Extinction'
 
-# Packages (subdirectories in lib/)
-packages = []
-
-# Modules (all python files in lib/)
-modules = [m.replace("lib/", "%s." % name).replace('.py', '') for m in glob.glob("lib/*.py")]
+# Packages (subdirectories in extinction/)
+packages = ["Extinction", "Extinction.extern"]
 
 # Scripts (in scripts/)
 scripts = glob.glob("scripts/*.py")
@@ -67,9 +64,9 @@ setup(name=name,
       url="https://github.com/nicolaschotard/Extinction",
       author="Nicolas Chotard, Celine Combet, Dominique Boutigny",
       author_email="nchotard@in2p3.fr",
-      package_dir={name: 'lib'},
+      package_dir={name: 'extinction'},
       packages=packages,
-      py_modules=modules,
+      #py_modules=modules,
       scripts=scripts,
       package_data=package_data,
       cmdclass=cmdclass,

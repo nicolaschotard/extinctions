@@ -1,15 +1,13 @@
 import os
-import pyfits
 import healpy
-import numpy
+import numpy as np
+from astropy.io import fits
 import astropy.units as units
 from astropy.coordinates import SkyCoord
 
-from ToolBox.Astro import Fetchers
-from astroquery.irsa_dust import IrsaDust
-from sncosmo import dustmap
-import lsst.afw.geom as afwGeom
-from Extinction import extinction
+from Extinction.extern import snfactory, argonaut
+from astroquery.irsa_dust import IrsaDust as astroquery
+from sncosmo import dustmap as sncosmo
 
 def load_map(map=0):
     """
@@ -24,14 +22,14 @@ def load_map(map=0):
         hmap = healpy.read_map(map)
     elif map == 1:
         map = os.getenv('HOME') + '/.extinction/maps/ps1-ebv-4.5kpc.fits'
-        map = pyfits.getdata(map)
+        map = fits.getdata(map)
         hmap = map['ebv']
     elif map == 2:
         map = os.getenv('HOME') + '/.extinction/maps/SFD_dust_4096_sgp.fits'
-        hmap = pyfits.getdata(map)
+        hmap = fits.getdata(map)
     elif map == 3:
         map = os.getenv('HOME') + '/.extinction/maps/SFD_dust_4096_ngp.fits'
-        hmap = pyfits.getdata(map)
+        hmap = fits.getdata(map)
     return hmap
 
 def plot_map(map=0):
@@ -52,7 +50,7 @@ def plot_map(map=0):
                     norm='hist', min=0, max=0.5, xsize=2000)
     healpy.graticule()
     #healpy.gnomview(map, rot=[0,0.3], title='GnomView', unit='mK', format='%.2g')
-
+    
 def test_ebm(ra, dec, map=0):
     """
     Make some tests
@@ -64,8 +62,8 @@ def test_ebm(ra, dec, map=0):
     # Convert to galactic coordinates.
     l = coordinates.galactic.l.degree
     b = coordinates.galactic.b.degree
-    theta = (90.-b)*numpy.pi/180.
-    phi = l*numpy.pi/180.
+    theta = (90.-b)*np.pi/180.
+    phi = l*np.pi/180.
     print "l, b = %.3f, %.3f" % (l, b)
     print "theta, phi = %.3f, %.3f" % (theta, phi)
     m = load_map(map)
@@ -74,7 +72,7 @@ def test_ebm(ra, dec, map=0):
     ebv = healpy.get_interp_val(m, theta, phi)
 
     # from astroquery
-    t = IrsaDust.get_extinction_table('%.4f %.4f' % (ra, dec))
+    t = astroquery.get_extinction_table('%.4f %.4f' % (ra, dec))
     if map in [0, 2, 3]:
         t = t[9]['A_SFD'] / t[9]['A_over_E_B_V_SFD']
     else:
@@ -82,12 +80,17 @@ def test_ebm(ra, dec, map=0):
         print t
 
     # from SNf code (ned)
-    f = Fetchers.sfd_ebmv(ra, dec)
+    f = snfactory.sfd_ebmv(ra, dec)
 
     # from sncosmo
-    sn = dustmap.get_ebv_from_map([ra, dec], mapdir='/home/chotard/.extinction/maps/')
+    sn = sncosmo.get_ebv_from_map([ra, dec], mapdir='/home/chotard/.extinction/maps/')
 
     # from other query
-    ebv_sfd = extinction.query(ra, dec, coordsys='equ', mode='sfd')['EBV_SFD']
-    
-    return ebv, t, f, sn, ebv_sfd
+    ebv_sfd = argonaut.query(ra, dec, coordsys='equ', mode='sfd')['EBV_SFD'][0]
+
+    print "\nAll results:"
+    print " - Healpy (lambda/nasa map): %.5f" % ebv
+    print " - Astropy/IrsaDust: %.5f" % t
+    print " - SNf code (irsa or ned): %.5f" % f, f
+    print " - sncosmo (local N/S maps): %.5f" % sn
+    print " - argonaut.skypams: %.5f" % ebv_sfd
