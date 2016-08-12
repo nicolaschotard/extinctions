@@ -1,6 +1,11 @@
+"""
+Set of utilities function
+"""
+
 import os
 import healpy
 import numpy as np
+
 from astropy.io import fits
 import astropy.units as units
 from astropy.coordinates import SkyCoord
@@ -9,7 +14,7 @@ from Extinction.extern import snfactory, argonaut
 from astroquery.irsa_dust import IrsaDust as astroquery
 from sncosmo import dustmap as sncosmo
 
-def load_map(map=0):
+def load_map(lmap=0):
     """
     map is either 
     0: sfd
@@ -17,24 +22,26 @@ def load_map(map=0):
     2: std_s
     3: sfd_n
     """
-    if map == 0:
-        map = os.getenv('HOME') + '/.extinction/maps/lambda_sfd_ebv.fits'
-        hmap = healpy.read_map(map)
-    elif map == 1:
-        map = os.getenv('HOME') + '/.extinction/maps/ps1-ebv-4.5kpc.fits'
-        map = fits.getdata(map)
-        hmap = map['ebv']
-    elif map == 2:
-        map = os.getenv('HOME') + '/.extinction/maps/SFD_dust_4096_sgp.fits'
-        hmap = fits.getdata(map)
-    elif map == 3:
-        map = os.getenv('HOME') + '/.extinction/maps/SFD_dust_4096_ngp.fits'
-        hmap = fits.getdata(map)
+    if lmap == 0:
+        lmap = os.getenv('HOME') + '/.extinction/maps/lambda_sfd_ebv.fits'
+        hmap = healpy.read_map(lmap)
+    elif lmap == 1:
+        lmap = os.getenv('HOME') + '/.extinction/maps/ps1-ebv-4.5kpc.fits'
+        lmap = fits.getdata(lmap)
+        hmap = lmap['ebv']
+    elif lmap == 2:
+        lmap = os.getenv('HOME') + '/.extinction/maps/SFD_dust_4096_sgp.fits'
+        hmap = fits.getdata(lmap)
+    elif lmap == 3:
+        lmap = os.getenv('HOME') + '/.extinction/maps/SFD_dust_4096_ngp.fits'
+        hmap = fits.getdata(lmap)
     return hmap
 
 def plot_map(map=0):
     """
-    map is either 
+    Plot a map
+    
+    map is either
     0: sfd
     1: schlafly
     2: std_s
@@ -50,7 +57,7 @@ def plot_map(map=0):
                     norm='hist', min=0, max=0.5, xsize=2000)
     healpy.graticule()
     #healpy.gnomview(map, rot=[0,0.3], title='GnomView', unit='mK', format='%.2g')
-    
+
 def test_ebm(ra, dec, map=0):
     """
     Make some tests

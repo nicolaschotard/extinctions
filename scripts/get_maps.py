@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+"""
+Download a set of dust maps
+"""
+
 import os
 import sys
 import yaml
@@ -8,17 +12,21 @@ from argparse import ArgumentParser
 from pkg_resources import resource_filename
 from shutil import copy2
 
-def download(f, out, update=False):
-    path = out+"/"+os.path.basename(f)
-    if os.path.exists(path):
+def download(url, out, update=False):
+    """
+    Download a file in an output directory (force with update)
+    """
+    local_path = out+"/"+os.path.basename(url)
+    if os.path.exists(local_path):
         if update:
-            os.remove(path)
+            os.remove(local_path)
         else:
-            print " File", path, "already exist. Pass!"
+            print " File", local_path, "already exist. Pass!"
             return
-    print " - %s -> %s" % (f, out)
-    wget.download(f, out=path)
+    print " - %s -> %s" % (url, out)
+    wget.download(url, out=local_path)
     print ""
+
 
 if __name__ == "__main__":
 
@@ -36,13 +44,14 @@ if __name__ == "__main__":
 
     if args.outdir is not None:
         outdir = args.outdir
-        print "Please make sure to add '%s' to your path in order for the code to find the maps using" % outdir
+        print "Please make sure to add '%s' to your path in order for " % \
+            outdir + "the code to find the maps using"
         print "export DUSTMAP='%s'" % outdir
         print " or"
         print "setenv DUSTMAP '%s'" % outdir
     else:
         outdir = os.getenv('HOME') + "/.extinction/maps"
-    
+
     if not os.path.isdir(outdir):
         print "INFO: Creating output directoy:", outdir
         os.makedirs(outdir)
@@ -63,7 +72,7 @@ if __name__ == "__main__":
         for i, m in enumerate(sorted(maps)):
             print "       %i: %s (%s) - %s" % (i, m, maps[m]['size'], maps[m]['url'])
         sys.exit()
-        
+
     # Selection by the user?
     if args.select is not None:
         select = args.select.split(',')
@@ -82,7 +91,7 @@ if __name__ == "__main__":
         if os.path.exists(path):
             print " File", path, "already exist."
             maps.pop(m)
-    
+
     print "INFO: Downloading the following maps:"
     for i, m in enumerate(sorted(maps)):
         print "       %i: %s" % (i, m)
