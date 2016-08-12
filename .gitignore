@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod~]
 *$py.class
 *.yaml~
+*.yml~
+*.rst~
+*.html~
 
 # C extensions
 *.so
@@ -16,7 +19,7 @@ dist/
 downloads/
 eggs/
 .eggs/
-#lib/
+lib/
 lib64/
 parts/
 sdist/
@@ -63,6 +66,7 @@ instance/
 
 # Sphinx documentation
 docs/_build/
+
 
 # PyBuilder
 target/
