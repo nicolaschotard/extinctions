@@ -1,35 +1,16 @@
 #!/usr/bin/env python
 
-import sys
+import os
 import glob
+import yaml
 
 from setuptools import setup
-from setuptools.command.test import test as TestCommand
 
-import numpy
+README = '/'.join(os.path.realpath(__file__).split('/')[:-1]) + '/README.rst'
+VERSION = '/'.join(os.path.realpath(__file__).split('/')[:-1]) + '/version.yaml'
 
 # Get __version__ from version.py without importing package itself.
-with open('version.py') as f:
-    exec(f.read())
-
-def readme():
-    with open('README.md') as f:
-        return f.read()
-    
-class PyTest(TestCommand):
-    """Enables setup.py test"""
-
-    user_options = [('pytest-args=', 'a', "Arguments to pass to py.test")]
-
-    def initialize_options(self):
-        TestCommand.initialize_options(self)
-        self.pytest_args = []
-
-    def run_tests(self):
-        #import here, because outside the eggs aren't loaded
-        import pytest
-        errno = pytest.main(self.pytest_args)
-        sys.exit(errno)
+__version__ = yaml.load(open(VERSION))['version']
 
 # Package name
 name = 'Extinction'
@@ -42,18 +23,7 @@ scripts = glob.glob("scripts/*.py")
 
 cmdclass = {}
 command_options = {}
-package_data = {}
-
-# build_sphinx command in case sphinx is installed
-try:
-    from sphinx.setup_command import BuildDoc
-    cmdclass.update({'build_sphinx': BuildDoc})
-    command_options.update({'build_sphinx': {
-        'version': ('setup.py', __version__),
-        'release': ('setup.py', __version__)}
-    })
-except ImportError:
-    pass
+package_data = {name: ["data/maps.yaml"]}
 
 setup(name=name,
       version=__version__,

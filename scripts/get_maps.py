@@ -4,6 +4,8 @@ import os
 import yaml
 import wget
 from argparse import ArgumentParser
+from pkg_resources import resource_filename
+from shutil import copy2
 
 def download(f, out, update=False):
     path = out+"/"+os.path.basename(f)
@@ -24,6 +26,9 @@ if __name__ == "__main__":
                         help="Output directory in where to put the dust maps")
     parser.add_argument("--update", action='store_true', default=False,
                         help="Update the maps.yaml file")
+    parser.add_argument("--distant", action='store_true', default=False,
+                        help="Copy the maps list from the distant github"
+                        " repository instead of using the local one")
     args = parser.parse_args()
 
     if args.outdir is not None:
@@ -41,9 +46,14 @@ if __name__ == "__main__":
     else:
         print "INFO: output directory used is", outdir
 
-    m = "https://raw.githubusercontent.com/nicolaschotard/Extinction/master/maps/maps.yaml"
-    print "INFO: downloading the map list from the github repository\n"
-    download(m, outdir, update=args.update)
+    if args.distant:
+        m = "https://raw.githubusercontent.com/nicolaschotard/Extinction/master/maps/maps.yaml"
+        print "INFO: downloading the map list from the distant github repository: %s\n" % m
+        download(m, outdir, update=args.update)
+    else:
+        m = resource_filename('Extinction', 'data/maps.yaml')
+        print "INFO: getting the map list from the local github repository: %s\n" % m
+        copy2(m, outdir)
     maps = yaml.load(open(outdir+"/maps.yaml"))
     print "\nINFO: Downloading the following maps:"
     for i, m in enumerate(sorted(maps)):
