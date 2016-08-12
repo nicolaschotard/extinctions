@@ -3,5 +3,6 @@
     "sfd_npg": "http://www.sdss3.org/svn/repo/catalogs/dust/trunk/maps/SFD_dust_4096_ngp.fits",
     "sfd_spg": "http://www.sdss3.org/svn/repo/catalogs/dust/trunk/maps/SFD_dust_4096_sgp.fits",
     "schlafly": "http://lambda.gsfc.nasa.gov/data/foregrounds/EBV/ps1-ebv-4.5kpc.fits",
-    "planck": "http://irsa.ipac.caltech.edu/data/Planck/release_1/all-sky-maps/maps/HFI_CompMap_ThermalDustModel_2048_R1.20.fits"
+    "planck": "http://irsa.ipac.caltech.edu/data/Planck/release_1/all-sky-maps/maps/HFI_CompMap_ThermalDustModel_2048_R1.20.fits",
+    "green": "http://lambda.gsfc.nasa.gov/data/foregrounds/EBV/lambda_green_dust_map_2d.fits"
 }

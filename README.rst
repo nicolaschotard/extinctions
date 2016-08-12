@@ -42,27 +42,17 @@ possible with the option `--outdir`, as long at this output directory
 is correctly added to the PATH environment variable. Already existing
 maps in the output directory will not be downloaded again.
 
-.. include:: extinction/data/maps.yaml
+Available dust maps are for now:
 
+- `SFD98 <http://lambda.gsfc.nasa.gov/product/foreground/dust_map.cfm>`_, full sky Healpy format
+- SFD98 north/south dust maps
 
-- [E(B-V)
-  (SFD)](http://lambda.gsfc.nasa.gov/data/foregrounds/SFD/lambda_sfd_ebv.fits)
-  from http://lambda.gsfc.nasa.gov/product/foreground/fg_sfd_get.cfm
-- [E(B-V) (Schlafly et al
-  2014)](http://lambda.gsfc.nasa.gov/data/foregrounds/EBV/ps1-ebv-4.5kpc.fits)
-  from
-  http://lambda.gsfc.nasa.gov/product/foreground/fg_ebv_map_get.cfm
-- [E(B-V) (Green et
-  al. 2015)](http://lambda.gsfc.nasa.gov/data/foregrounds/EBV/lambda_green_dust_map_2d.fits)
-  from
-  http://lambda.gsfc.nasa.gov/product/foreground/fg_ebv_2015_map_get.cfm
-- [Planck astrophysical foregrounds from parametric component
-  separation, 2015
-  version](http://pla.esac.esa.int/pla/aio/product-action?MAP.MAP_ID=COM_CompMap_ThermalDust-commander_2048_R2.00.fits),
-  from
-  [here](https://wiki.cosmos.esa.int/planckpla2015/index.php/CMB_and_astrophysical_component_maps#Thermal_dust_emission_2)
-  (Question for Celine: is it the right one?)
-- other known maps?
+  - `north <http://www.sdss3.org/svn/repo/catalogs/dust/trunk/maps/SFD_dust_4096_ngp.fits>`_
+  - `south <http://www.sdss3.org/svn/repo/catalogs/dust/trunk/maps/SFD_dust_4096_sgp.fits>`_
+
+- `Planck <http://irsa.ipac.caltech.edu/data/Planck/release_1/all-sky-maps/previews/HFI_CompMap_ThermalDustModel_2048_R1.20/index.html>`_
+- `Schlafly 2014 <http://lambda.gsfc.nasa.gov/product/foreground/fg_ebv_map_info.cfm>`_
+- `Green 2015 <http://lambda.gsfc.nasa.gov/product/foreground/fg_ebv_2015_map_info.cfm>`_
 
 
 Dependencies
@@ -73,7 +63,7 @@ Dependencies
 - numpy
 - matplotlib
 - seaborn
-- astropy / astroquery
+- astropy / astroquery  
 - healpy
 
 Usage
