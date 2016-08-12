@@ -86,6 +86,6 @@ if __name__ == "__main__":
     print "INFO: Downloading the following maps:"
     for i, m in enumerate(sorted(maps)):
         print "       %i: %s" % (i, m)
-    print
+
     for m in sorted(maps):
         download(maps[m]['url'], outdir)
