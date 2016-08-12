@@ -1,3 +1,11 @@
+.. image:: https://landscape.io/github/nicolaschotard/Extinction/master/landscape.svg?style=flat
+   :target: https://landscape.io/github/nicolaschotard/Extinction/master
+   :alt: Code Health
+
+.. image:: https://travis-ci.org/nicolaschotard/Extinction.svg?branch=master
+   :target: https://travis-ci.org/nicolaschotard/Extinction
+   :alt: Travis CI build status (Linux)
+
 Extinction
 ==========
 
