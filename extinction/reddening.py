@@ -1,5 +1,5 @@
 """
-Set of utilities functions
+Get the reddening E(B-V) for a given set of coordinates
 """
 
 import os
@@ -8,7 +8,7 @@ import healpy
 import numpy as np
 
 from astropy.io import fits
-import astropy.units as units
+from astropy.units import degree
 from astropy.coordinates import SkyCoord
 
 from Extinction.extern import snfactory, argonaut, others
@@ -18,16 +18,14 @@ class Reddening(object):
 
     def __init__(self, ra, dec, map_dir=None):
         """Input are the rad/dec coordinates in degree and a map directory"""
-        assert type(ra) == type(dec), 'Coordinate type must be the same (float or list)'
-        self.ra = ra if type(ra) == list else [ra]
-        self.dec = dec if type(dec) == list else [dec] 
-        self.coordinates = SkyCoord(ra=ra, dec=dec, unit=units.degree)
+        assert isinstance(ra, type(dec)), 'Coordinate type must be the same (float or list)'
+        self.ra = ra if isinstance(ra, list) else [ra]
+        self.dec = dec if isinstance(dec, list) else [dec]
+        self.coordinates = SkyCoord(ra=ra, dec=dec, unit=degree)
 
         # Convert to galactic coordinates.
-        self.l = self.coordinates.galactic.l.degree
-        self.b = self.coordinates.galactic.b.degree
-        self.theta = (90.-self.b) * np.pi / 180.
-        self.phi = self.l * np.pi / 180.
+        self.theta = (90.-self.coordinates.galactic.b.degree) * np.pi / 180.
+        self.phi = self.coordinates.galactic.l.degree * np.pi / 180.
 
         # Map directory
         if map_dir is None:
@@ -36,7 +34,7 @@ class Reddening(object):
 
         # Load the maps
         self._load_maps()
-            
+
     def _load_maps(self):
         """Load the local maps"""
         if not os.path.exists(self.map_dir + '/maps.yaml'):
@@ -58,8 +56,8 @@ class Reddening(object):
             elif m in ['schlafly', 'green']:
                 self.maps[m]['map'] = fits.getdata(lmap)['ebv']
                 print ' - ', m, "is loaded"
-            
-    def from_astroquery(self, dustmap='SFD98', filter=''):
+
+    def from_astroquery(self, dustmap='SFD98'):
         """Query IRAS using the astropy/astroquery tools (SFD98 or SF11 maps)"""
         if len(self.ra) >= 2:
             print "WARNING: This online query is SLOW for several set of coordinates"
@@ -89,7 +87,6 @@ class Reddening(object):
         nest = True if dustmap in ['green'] else False
         return healpy.get_interp_val(self.maps[dustmap]['map'],
                                      self.theta, self.phi, nest=nest)
-    
 
 def load_map(lmap=0):
     """
@@ -150,7 +147,7 @@ def test_ebm(ra, dec, map=0, nest=False):
     """
     # Parse input
     coordinates = SkyCoord(ra=ra, dec=dec,
-                           unit=units.degree)
+                           unit=degree)
 
     # Convert to galactic coordinates.
     l = coordinates.galactic.l.degree
@@ -189,4 +186,3 @@ def test_ebm(ra, dec, map=0, nest=False):
     print " - SNf code (irsa or ned): %.5f" % f, f
     print " - sncosmo (local N/S maps): %.5f" % sn
     print " - argonaut.skypams: %.5f" % ebv_sfd
-    
