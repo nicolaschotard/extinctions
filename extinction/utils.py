@@ -1,8 +1,9 @@
 """
-Set of utilities function
+Set of utilities functions
 """
 
 import os
+import yaml
 import healpy
 import numpy as np
 
@@ -10,9 +11,85 @@ from astropy.io import fits
 import astropy.units as units
 from astropy.coordinates import SkyCoord
 
-from Extinction.extern import snfactory, argonaut
-from astroquery.irsa_dust import IrsaDust as astroquery
-from sncosmo import dustmap as sncosmo
+from Extinction.extern import snfactory, argonaut, others
+
+class Reddening(object):
+    """Query reddening from different sources"""
+
+    def __init__(self, ra, dec, map_dir=None):
+        """Input are the rad/dec coordinates in degree and a map directory"""
+        assert type(ra) == type(dec), 'Coordinate type must be the same (float or list)'
+        self.ra = ra if type(ra) == list else [ra]
+        self.dec = dec if type(dec) == list else [dec] 
+        self.coordinates = SkyCoord(ra=ra, dec=dec, unit=units.degree)
+
+        # Convert to galactic coordinates.
+        self.l = self.coordinates.galactic.l.degree
+        self.b = self.coordinates.galactic.b.degree
+        self.theta = (90.-self.b) * np.pi / 180.
+        self.phi = self.l * np.pi / 180.
+
+        # Map directory
+        if map_dir is None:
+            map_dir = os.getenv('HOME') + '/.extinction/maps/'
+        self.map_dir = map_dir
+
+        # Load the maps
+        self._load_maps()
+            
+    def _load_maps(self):
+        """Load the local maps"""
+        if not os.path.exists(self.map_dir + '/maps.yaml'):
+            print "ERROR: No maps.yaml file found in", self.map_dir, ". ABORT."
+        print "INFO: Loading the maps from local directory", self.map_dir
+        self.maps = yaml.load(open(self.map_dir + '/maps.yaml'))
+        for m in self.maps:
+            lmap = self.map_dir + '/' + os.path.basename(self.maps[m]['url'])
+            if not os.path.exists(lmap):
+                print " - WARNING: You must download the map %s (%s) in order " % \
+                    (os.path.basename(lmap), m) + "to use it. Use get_maps to do so."
+                continue
+            if m in ['sfd_npg', 'sfd_spg']:
+                continue
+            elif m in ['sfd', 'planck']:
+                field = 2 if m == 'planck' else 0
+                self.maps[m]['map'] = healpy.read_map(lmap, verbose=False, field=field)
+                print ' - ', m, "is loaded"
+            elif m in ['schlafly', 'green']:
+                self.maps[m]['map'] = fits.getdata(lmap)['ebv']
+                print ' - ', m, "is loaded"
+            
+    def from_astroquery(self, dustmap='SFD98', filter=''):
+        """Query IRAS using the astropy/astroquery tools (SFD98 or SF11 maps)"""
+        if len(self.ra) >= 2:
+            print "WARNING: This online query is SLOW for several set of coordinates"
+        tables = [others.astroquery.get_extinction_table('%.4f %.4f' % (ra, dec))
+                  for ra, dec in zip(self.ra, self.dec)]
+        if dustmap == 'SFD98':
+            return [np.median(t['A_SFD'] / t['A_over_E_B_V_SFD']) for t in tables]
+        else:
+            return [np.median(t['A_SandF'] / t['A_over_E_B_V_SandF']) for t in tables]
+
+    def from_snfactory(self):
+        """Query on IRSA or NED using code from the SNfactory ToolBox"""
+        if len(self.ra) >= 2:
+            print "WARNING: This online query is SLOW for several set of coordinates"
+        return [snfactory.sfd_ebmv(ra, dec) for ra, dec in zip(self.ra, self.dec)]
+
+    def from_sncosmo(self):
+        """Using sncosmo query utilisies on local SFD98 north/south maps"""
+        return others.sncosmo.get_ebv_from_map([self.ra, self.dec], mapdir=self.map_dir)
+
+    def from_argonaut(self):
+        """Using the distant argonaut query utility"""
+        return argonaut.query(self.ra, self.dec, coordsys='equ', mode='sfd')['EBV_SFD']
+
+    def query_local_map(self, dustmap='sfd'):
+        """Query one of the local map"""
+        nest = True if dustmap in ['green'] else False
+        return healpy.get_interp_val(self.maps[dustmap]['map'],
+                                     self.theta, self.phi, nest=nest)
+    
 
 def load_map(lmap=0):
     """
@@ -23,6 +100,7 @@ def load_map(lmap=0):
     1: schlafly
     2: std_s
     3: sfd_n
+    4: planck
     """
     if lmap == 0:
         lmap = os.getenv('HOME') + '/.extinction/maps/lambda_sfd_ebv.fits'
@@ -37,6 +115,13 @@ def load_map(lmap=0):
     elif lmap == 3:
         lmap = os.getenv('HOME') + '/.extinction/maps/SFD_dust_4096_ngp.fits'
         hmap = fits.getdata(lmap)
+    elif lmap == 4:
+        lmap = os.getenv('HOME') + '/.extinction/maps/HFI_CompMap_ThermalDustModel_2048_R1.20.fits'
+        hmap = healpy.read_map(lmap)
+    elif lmap == 5:
+        lmap = os.getenv('HOME') + '/.extinction/maps/lambda_green_dust_map_2d.fits'
+        lmap = fits.getdata(lmap)
+        hmap = lmap['ebv']
     return hmap
 
 def plot_map(map=0):
@@ -59,7 +144,7 @@ def plot_map(map=0):
                     norm='hist', min=0, max=0.5, xsize=2000)
     healpy.graticule()
 
-def test_ebm(ra, dec, map=0):
+def test_ebm(ra, dec, map=0, nest=False):
     """
     Make some tests
     """
@@ -77,10 +162,12 @@ def test_ebm(ra, dec, map=0):
     m = load_map(map)
 
     # from this code
-    ebv = healpy.get_interp_val(m, theta, phi)
+    if map == 5:
+        nest=True
+    ebv = healpy.get_interp_val(m, theta, phi, nest=nest)
 
     # from astroquery
-    t = astroquery.get_extinction_table('%.4f %.4f' % (ra, dec))
+    t = others.astroquery.get_extinction_table('%.4f %.4f' % (ra, dec))
     if map in [0, 2, 3]:
         t = t[9]['A_SFD'] / t[9]['A_over_E_B_V_SFD']
     else:
@@ -91,7 +178,7 @@ def test_ebm(ra, dec, map=0):
     f = snfactory.sfd_ebmv(ra, dec)
 
     # from sncosmo
-    sn = sncosmo.get_ebv_from_map([ra, dec], mapdir='/home/chotard/.extinction/maps/')
+    sn = others.sncosmo.get_ebv_from_map([ra, dec], mapdir='/home/chotard/.extinction/maps/')
 
     # from other query
     ebv_sfd = argonaut.query(ra, dec, coordsys='equ', mode='sfd')['EBV_SFD'][0]
@@ -102,3 +189,4 @@ def test_ebm(ra, dec, map=0):
     print " - SNf code (irsa or ned): %.5f" % f, f
     print " - sncosmo (local N/S maps): %.5f" % sn
     print " - argonaut.skypams: %.5f" % ebv_sfd
+    

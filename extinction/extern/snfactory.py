@@ -7,21 +7,25 @@ Astronomical info web-based fetchers/parsers
 This code comes from the SNfactory ToolBox (ToolBox.Astro.Fetchers)
 """
 
+from datetime import datetime
+import urlparse
+import urllib
+import re
 from astropy.coordinates import SkyCoord
 
-def subdict(d, keys=None):
+def subdict(dic, keyss=None):
     """
     Iterate sub-dicts of a dict by key list
     """
-    if keys is None:
-        keys = []
-    yield d
-    for k in keys:
-        if isinstance(d, dict) and k in d:
-            d = d[k]
-            if isinstance(d, (tuple, list)):
-                d = d[-1]
-            yield d
+    if keyss is None:
+        keyss = []
+    yield dic
+    for k in keyss:
+        if isinstance(dic, dict) and k in dic:
+            dic = dic[k]
+            if isinstance(dic, (tuple, list)):
+                dic = dic[-1]
+            yield dic
         else:
             yield None
 
@@ -89,18 +93,13 @@ def sfd_ebmv(ra, dec, equinox=2000, obsepoch=None, service='IRSA'):
 
     :param service: can be 'IRSA' or 'NED'
     """
-    from datetime import datetime
-    import urlparse
-    import urllib
-    import re
 
     assert equinox in [1950, 2000], 'equinox should be 1950 or 2000'
 
     if obsepoch is None:
         obsepoch = datetime.utcnow().year
 
-    c = SkyCoord(ra, dec, unit='deg')
-    ra, dec = c.to_string('hmsdms').split()
+    ra, dec = SkyCoord(ra, dec, unit='deg').to_string('hmsdms').split()
     equinox = {1950: 'B1950.0', 2000: 'J2000.0'}[equinox]
 
     if service.lower() == 'ned':
@@ -122,7 +121,7 @@ def sfd_ebmv(ra, dec, equinox=2000, obsepoch=None, service='IRSA'):
         html = urllib.urlopen(url).read()
 
         # grep into the HTML
-        mwebv = re.search('(?<=E\(B-V\)\s=\s)\d+\.\d+(?=\smag)', html)
+        mwebv = re.search(r'(?<=E\(B-V\)\s=\s)\d+\.\d+(?=\smag)', html)
         if mwebv is not None:
             return float(mwebv.group(0))
         else:
@@ -140,10 +139,10 @@ def sfd_ebmv(ra, dec, equinox=2000, obsepoch=None, service='IRSA'):
                                    ''))
 
         # parse the XML
-        info = xml_parser(urllib.urlopen(url).read())
-        if info is not None:
+        infos = xml_parser(urllib.urlopen(url).read())
+        if infos is not None:
             # the other 'result' are not in mag
-            mwebv = info['results']['result'][0]['statistics']['refPixelValueSFD']
+            mwebv = infos['results']['result'][0]['statistics']['refPixelValueSFD']
             return float(mwebv.split()[0])
         else:
             return None

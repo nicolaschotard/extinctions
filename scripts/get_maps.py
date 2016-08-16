@@ -44,12 +44,12 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.outdir is not None:
-        outdir = args.outdir
-        print "Please make sure to add '%s' to your path in order for " % \
-            outdir + "the code to find the maps using"
-        print "export DUSTMAP='%s'" % outdir
+        outdir = os.path.abspath(args.outdir)
+        print "WARNING: Please make sure to add '%s' to your path in order for " % \
+            outdir + "the code to find the maps. Use:"
+        print " export DUSTMAP='%s'" % outdir
         print " or"
-        print "setenv DUSTMAP '%s'" % outdir
+        print " setenv DUSTMAP '%s'" % outdir
     else:
         outdir = os.getenv('HOME') + "/.extinction/maps"
 
