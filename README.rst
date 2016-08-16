@@ -6,13 +6,29 @@
    :target: https://travis-ci.org/nicolaschotard/Extinction
    :alt: Travis CI build status (Linux)
 
+____
+
+**WARNING**: Package under development
+
+____
+
+.. inclusion-marker-do-not-remove
+	 
 Extinction
 ==========
 
-**Warning**: Package under development
+Python package including different extinction laws and dust maps. Useful to
 
-Python package including different extinction laws and dust maps.
+- get E(B-V) for a set of coordinates (or list of coordinates) from different
+  - distant sources (IRSA, NED)
+  - local maps (SFD98, Schlafly 2014, Planck 2013, Green 2015)
 
+- compute the ISM transmission for different extincion laws
+  - CCM89: Cardelli, Clayton and Mathis (`<http://adsabs.harvard.edu/abs/1989ApJ...345..245C>`_)
+  - OD94: O'Donnell (`<http://adsabs.harvard.edu/abs/1994ApJ...422..158O>`_)
+  - FM98: Fitzpatrick & Massa (1998)
+  - G08: Goobar (`<http://adsabs.harvard.edu/abs/2008ApJ...686L.103G>`_)
+    
 Installation
 ------------
 
@@ -21,22 +37,26 @@ To install::
   git clone https://github.com/nicolaschotard/Extinction.git
   pip install Extinction/
 
-To install in a local directory `mypath`, use::
+To install in a local directory ``mypath``, use::
 
   pip install --prefix='mypath' Extinction/
 
 and do not forget to add it to your PYTHONPATH.
 
-To upgrade to a new version (after a `git pull` or a local modification), use::
+To upgrade to a new version (after a ``git pull`` or a local modification), use::
 
   pip install --upgrade (--prefix='mypath') Extinction/
 
-
-In the future, release versions will be listed
-`here <http://github.com/nicolaschotard/Extinction/releases>`_, and
-installed using, e.g.::
+To install a release version (no release version available yet)::
 
   pip install http://github.com/nicolaschotard/Extinction/archive/v0.1.tar.gz
+
+Also works with the master::
+
+  pip install (--upgrade) https://github.com/nicolaschotard/Extinction/archive/master.zip
+
+In the future, release versions will be listed at this `location
+<http://github.com/nicolaschotard/Extinction/releases>`_.
 
 
 Dust map setup
@@ -73,7 +93,8 @@ Dependencies
 Usage
 -----
 
-You need to get the maps listed above. To do so, use the script `get_maps.py`::
+To get the extinction maps listed above, use the script `get_maps.py`
+with the follwoing options ::
 
   get_maps.py -h
   usage: get_maps.py [-h] [--outdir OUTDIR] [--update] [--list]
@@ -88,3 +109,42 @@ You need to get the maps listed above. To do so, use the script `get_maps.py`::
      --exclude EXCLUDE  Exclude map(s) (coma separated).If the select option is
                         used, the exclude option will be ignored.
 
+To have a look at the different extinction laws amd dust maps, you can
+use the script `extinction_plots.py`.
+
+Here is an example of how to get the value of E(B-V) for a set of
+coordinates (RA,DEC)::
+
+  In [1]: ra, dec = 340.83, -9.59
+  In [2]: from extinction import reddening
+  In [3]: red = reddening.Reddening(ra, dec) # ra dec can also be lists of coordinates
+  INFO: Loading the maps from local directory /home/chotard/.extinction/maps/
+  - green is loaded
+  - schlafly is loaded
+  - sfd is loaded
+  - WARNING: You must download the map HFI_CompMap_ThermalDustModel_2048_R1.20.fits (planck) in order to use it. Use get_maps to do so.
+
+You can then get the E(B-V) from different sources::
+
+  # from the local maps
+  In [4]: red.query_local_map(dustmap='sfd')
+  Out[4]: 0.047723956233310674
+  In [5]: red.query_local_map(dustmap='schlafly')
+  Out[5]: 0.062566755984547445
+
+  # from the SFD98 north/south maps using `sncosmo`
+  In [6]: r.from_sncosmo()
+  Out[6]: array([ 0.0473752])
+
+  # Using astroquery
+  In [7]: r.from_astroquery()
+  Downloading http://irsa.ipac.caltech.edu//workspace/TMP_XG1Joz_30445/DUST/340.8300_-9.5900.v0001/extinction.tbl
+  |==============================================================================================| 4.3k/4.3k (100.00%)         0s
+  Out[7]: [0.047377326565143825]
+
+TODO
+----
+
+- Errors on E(B-V) are available for a few maps, but not yet accessible here. But this will come soon.
+- A few extinction laws are already available, but not yet fully tested nor interfaced with the E(B-V) query tools.
+- A set of magnitudes systems has to be implemented (started in `utils.py` for now). 
