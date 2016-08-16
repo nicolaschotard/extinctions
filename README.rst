@@ -33,7 +33,7 @@ To upgrade to a new version (after a `git pull` or a local modification), use::
 
 
 In the future, release versions will be listed
-[here](http://github.com/nicolaschotard/Extinction/releases), and
+`here <http://github.com/nicolaschotard/Extinction/releases>`_, and
 installed using, e.g.::
 
   pip install http://github.com/nicolaschotard/Extinction/archive/v0.1.tar.gz
@@ -73,4 +73,18 @@ Dependencies
 Usage
 -----
 
-TBD
+You need to get the maps listed above. To do so, use the script `get_maps.py`::
+
+  get_maps.py -h
+  usage: get_maps.py [-h] [--outdir OUTDIR] [--update] [--list]
+                   [--select SELECT] [--exclude EXCLUDE]
+
+  optional arguments:
+     -h, --help         show this help message and exit
+     --outdir OUTDIR    Output directory in where to put the dust maps
+     --update           Update the maps directory in case of changes of maps.yaml
+     --list             List of available maps and exit
+     --select SELECT    Select maps to download (coma separated)
+     --exclude EXCLUDE  Exclude map(s) (coma separated).If the select option is
+                        used, the exclude option will be ignored.
+
