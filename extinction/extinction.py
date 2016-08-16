@@ -1,16 +1,8 @@
-######################################################################
-# Filename:      Extinction.py
-# Version:       $Revision: 1.13 $
-# Description:   Simple module providing Cardelli/O'Donnell law
-# Author:        $Author: nchotard $
-# $Id: Extinction.py,v 1.13 2015/05/21 11:50:37 nchotard Exp $
-######################################################################
-
 """
 .. _Extinction:
 
-ToolBox.Astro.Extinction - Cardelli/O'Donnell extinction law
-============================================================
+Extinction.extinction - Set of extinction laws
+==============================================
 
 References:
 
@@ -20,11 +12,6 @@ References:
 * FM98: Fitzpatrick & Massa (1998)
 * G08: Goobar (`<http://adsabs.harvard.edu/abs/2008ApJ...686L.103G>`_)
 """
-
-from __future__ import print_function
-
-__author__ = "Yannick Copin <ycopin@ipnl.in2p3.fr>"
-__version__ = "$Id: Extinction.py,v 1.13 2015/05/21 11:50:37 nchotard Exp $"
 
 import numpy as N
 from scipy import interpolate as I
