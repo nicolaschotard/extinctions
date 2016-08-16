@@ -1,5 +1,5 @@
 """
-.. _Extinction:
+.. _extinction:
 
 Extinction.extinction - Set of extinction laws
 ==============================================
@@ -15,6 +15,7 @@ References:
 
 import numpy as N
 from scipy import interpolate as I
+import pylab
 
 # *Indicative* Bessel filter central wavelengths [A]
 BesselFilters = dict(U=3590.,
@@ -352,12 +353,10 @@ class ExtinctionsPlots:
 
     Or::
 
-      python Extinction.py.
+      python extinction.py.
     """
 
     def __init__(self, dpi=100, wmin=3000, wmax=10000):
-
-        self.pylab = __import__('pylab')  # Do not import in the library per se
 
         # Set the different parameters used to create the figures
         self.dpi = dpi
@@ -366,7 +365,7 @@ class ExtinctionsPlots:
         # Set the reference wavelength to the one of the CCM law (i.e. 5494.5
         # A)
         self.ref_wavelengths = {'B': 4394.43, 'V': 5494.51}
-        self.cmap = self.pylab.cm.RdYlBu
+        self.cmap = pylab.cm.RdYlBu
         self.num = 100
         self.Rvs = N.linspace(1.1, 4.1, self.num)
         self.Ebmvs = [0.05, 0.2, 0.6]
@@ -386,17 +385,17 @@ class ExtinctionsPlots:
 
     def plot_extinctionLaws(self):
         """
-        Plots all the avalaible extinction laws from Extinction.py
+        Plots all the avalaible extinction laws from extinction.py
         - The Goobar extinction law
         - The Cardelli extinction law
         - The Fitzpatrick extinction law
         - The O'Donnel extinction law
         """
 
-        fig = self.pylab.figure(dpi=100)
+        fig = pylab.figure(dpi=100)
         print(("Figure %i: Extinction laws" % (fig.number)).center(80, '='))
         print("""
-        Avalaible extinction laws from Extinction.py
+        Avalaible extinction laws from extinction.py
         """)
         gl = "Goobar law".center(30, '-')
 
@@ -461,7 +460,7 @@ class ExtinctionsPlots:
         a and b. Plot also the interstellar medium transmission for the given
         Rv and E(B-V).
         """
-        fig = self.pylab.figure(dpi=self.dpi)
+        fig = pylab.figure(dpi=self.dpi)
         print(("Figure %i: Cardelli extinction law" %
                (fig.number)).center(80, '='))
         print("""
@@ -525,7 +524,7 @@ class ExtinctionsPlots:
         Plot the cardelli extinction law for several values of Rv.
         Expressed as Rlbd-Rv as a function of the inverse wavelength.
         """
-        fig = self.pylab.figure(dpi=self.dpi)
+        fig = pylab.figure(dpi=self.dpi)
         print(("Figure %i: CCM law variability (A(lbd)/Av)"
                % (fig.number)).center(80, '='))
         print("""
@@ -566,7 +565,7 @@ class ExtinctionsPlots:
         Plot the cardelli extinction law for several values of Rv.
         The figure express the extinction law variability as a function af Rv.
         """
-        fig = self.pylab.figure(dpi=self.dpi)
+        fig = pylab.figure(dpi=self.dpi)
         print(("Figure %i: CCM law variability (R(lbd)-Rv)" %
                (fig.number)).center(80, '='))
         print("""
@@ -621,7 +620,7 @@ class ExtinctionsPlots:
         variabilities can be seen in the IR.
         """
 
-        fig = self.pylab.figure(dpi=self.dpi)
+        fig = pylab.figure(dpi=self.dpi)
         print(("Figure %i: Transmission variability" %
                (fig.number)).center(80, '='))
         print("""
@@ -674,7 +673,7 @@ extinctionParameters = CCMextinctionParameters
 
 if __name__ == "__main__":
 
-    print("\nUse Extinction.py to plot the extinction laws.\n")
+    print("\nUse extinction.py to plot the extinction laws.\n")
 
     EP = ExtinctionsPlots()
 
