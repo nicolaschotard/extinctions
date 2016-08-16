@@ -1,3 +1,7 @@
+.. image:: http://readthedocs.org/projects/extinctions/badge/?version=latest
+   :target: http://extinctions.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status
+
 .. image:: https://landscape.io/github/nicolaschotard/Extinction/master/landscape.svg?style=flat
    :target: https://landscape.io/github/nicolaschotard/Extinction/master
    :alt: Code Health
@@ -20,10 +24,12 @@ Extinction
 Python package including different extinction laws and dust maps. Useful to
 
 - get E(B-V) for a set of coordinates (or list of coordinates) from different
+  
   - distant sources (IRSA, NED)
   - local maps (SFD98, Schlafly 2014, Planck 2013, Green 2015)
 
 - compute the ISM transmission for different extincion laws
+  
   - CCM89: Cardelli, Clayton and Mathis (`<http://adsabs.harvard.edu/abs/1989ApJ...345..245C>`_)
   - OD94: O'Donnell (`<http://adsabs.harvard.edu/abs/1994ApJ...422..158O>`_)
   - FM98: Fitzpatrick & Massa (1998)
