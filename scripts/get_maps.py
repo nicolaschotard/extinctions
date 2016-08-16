@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
-"""
-Download a set of dust maps
-"""
+"""Download a set of dust maps"""
 
 import os
 import sys
@@ -13,9 +11,7 @@ from pkg_resources import resource_filename
 from shutil import copy2
 
 def download(url, out, update=False):
-    """
-    Download a file in an output directory (force with update)
-    """
+    """Download a file in an output directory (force with update)"""
     local_path = out+"/"+os.path.basename(url)
     if os.path.exists(local_path):
         if update:
@@ -27,6 +23,11 @@ def download(url, out, update=False):
     wget.download(url, out=local_path)
     print ""
 
+def list_maps(maps):
+    """List the available maps from a dictionnary of maps"""
+    print "INFO: Available maps are"
+    for i, m in enumerate(sorted(maps)):
+        print "       %i: %s (%s) - %s" % (i, m, maps[m]['size'], maps[m]['url'])
 
 if __name__ == "__main__":
 
@@ -68,9 +69,7 @@ if __name__ == "__main__":
 
     # List the maps
     if args.list:
-        print "INFO: Available maps are"
-        for i, m in enumerate(sorted(maps)):
-            print "       %i: %s (%s) - %s" % (i, m, maps[m]['size'], maps[m]['url'])
+        list_maps(maps)
         sys.exit()
 
     # Selection by the user?

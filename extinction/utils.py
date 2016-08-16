@@ -16,7 +16,9 @@ from sncosmo import dustmap as sncosmo
 
 def load_map(lmap=0):
     """
-    map is either 
+    Load a map.
+
+    map is either
     0: sfd
     1: schlafly
     2: std_s
@@ -39,8 +41,8 @@ def load_map(lmap=0):
 
 def plot_map(map=0):
     """
-    Plot a map
-    
+    Plot a map.
+
     map is either
     0: sfd
     1: schlafly
@@ -56,7 +58,6 @@ def plot_map(map=0):
     healpy.mollview(map, title=title, unit='mag',
                     norm='hist', min=0, max=0.5, xsize=2000)
     healpy.graticule()
-    #healpy.gnomview(map, rot=[0,0.3], title='GnomView', unit='mK', format='%.2g')
 
 def test_ebm(ra, dec, map=0):
     """
@@ -64,13 +65,13 @@ def test_ebm(ra, dec, map=0):
     """
     # Parse input
     coordinates = SkyCoord(ra=ra, dec=dec,
-                           unit=units.degree) 
+                           unit=units.degree)
 
     # Convert to galactic coordinates.
     l = coordinates.galactic.l.degree
     b = coordinates.galactic.b.degree
-    theta = (90.-b)*np.pi/180.
-    phi = l*np.pi/180.
+    theta = (90.-b) * np.pi / 180.
+    phi = l * np.pi / 180.
     print "l, b = %.3f, %.3f" % (l, b)
     print "theta, phi = %.3f, %.3f" % (theta, phi)
     m = load_map(map)

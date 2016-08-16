@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
-import os, glob
+import os
+import glob
 
 # Automatically import all modules (python files)
 __all__ = [os.path.basename(m).replace('.py', '') for m in glob.glob("extinction/*.py")

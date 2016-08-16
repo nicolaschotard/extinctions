@@ -1,12 +1,14 @@
 """
-From http://argonaut.skymaps.info/usage#function-call, with a few modification to handle large query
+From http://argonaut.skymaps.info/usage#function-call, with a few modifications to handle large query
 """
 
-import json, requests
+import json
+import requests
 
 def query(lon, lat, coordsys='gal', mode='full', limit=500000):
     """
     Send a line-of-sight reddening query to the Argonaut web server.
+
 
     lon, lat: longitude and latitude, in degrees.
     coordsys: 'gal' for Galactic, 'equ' for Equatorial (J2000).
@@ -35,13 +37,13 @@ def query(lon, lat, coordsys='gal', mode='full', limit=500000):
     # make sure we have list
     if type(lon) == float:
         lon, lat = [lon], [lat]
-    
+
     # Make sure to have less than 500000 objects (the limit).
     # Cut the list in smaller pieces if that is the case.
     def chunk(ilist, length):
         """Divide a list 'l' into smaller lists of maximal length 'num'."""
         return [ilist[i:i + length] for i in range(0, len(ilist), length)]
-    
+
     if len(lon) >= limit:
         lons = chunk(lon, limit - 1)
         lats = chunk(lat, limit - 1)
@@ -51,20 +53,16 @@ def query(lon, lat, coordsys='gal', mode='full', limit=500000):
                 dicts[0][k].extend(dic[k])
         return dicts[0]
 
-    url = 'http://argonaut.skymaps.info/gal-lb-query-light'
-
-    payload = {'mode': mode}
-
     if coordsys.lower() in ['gal', 'g']:
-        payload['l'] = lon
-        payload['b'] = lat
+        payload = {'mode': mode, 'l': lon, 'b': lat}
     elif coordsys.lower() in ['equ', 'e']:
-        payload['ra'] = lon
-        payload['dec'] = lat
+        payload = {'mode': mode, 'ra': lon, 'dec': lat}
     else:
         raise ValueError("coordsys '{0}' not understood.".format(coordsys))
-    
-    req = requests.post(url, data=json.dumps(payload), headers={'content-type': 'application/json'})
+
+    req = requests.post('http://argonaut.skymaps.info/gal-lb-query-light',
+                        data=json.dumps(payload),
+                        headers={'content-type': 'application/json'})
 
     try:
         req.raise_for_status()
