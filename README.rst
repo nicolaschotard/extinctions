@@ -15,7 +15,7 @@ ____
 .. inclusion-marker-do-not-remove
 	 
 Extinction
-==========
+----------
 
 Python package including different extinction laws and dust maps. Useful to
 
