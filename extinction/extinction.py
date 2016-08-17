@@ -199,7 +199,7 @@ def fm99_extinction(lbda, rv=3.1, lmc2=False, avglmc=False, params=None,
 
     Based on `<http://idlastro.gsfc.nasa.gov/ftp/pro/astro/fm_unred.pro>`_
     """
-    if isinstance(lbda (int, float)):
+    if isinstance(lbda, (int, float)):
         lbda = [lbda]
 
     def fmuv(x, rv):
@@ -455,6 +455,8 @@ class ExtinctionsPlots(object):
         ax.legend(loc='best').draw_frame(False)
         ax.set_ylim(ymin=0.3, ymax=2.4)
 
+        fig.savefig('extinction_laws.png')
+
     def plot_cardelli_law(self, rv=3.1, ebmv=0.3):
         """
         Plot the cardelli extinction law for a given Rv, and its constituants a and b.
@@ -521,6 +523,8 @@ class ExtinctionsPlots(object):
         ax1.legend(loc='best').draw_frame(False)
         ax2.legend(loc='best').draw_frame(False)
 
+        fig.savefig('ccm_law.png')
+
     def plot_cardelli_law_variability(self):
         """
         Plot the cardelli extinction law for several values of Rv.
@@ -563,6 +567,8 @@ class ExtinctionsPlots(object):
         ax.set_ylim(ymin=0.05, ymax=4)
         ax.set_xlim(xmin=self.wavelength.min(), xmax=self.wavelength.max())
 
+        fig.savefig('ccm_law_variability.png')
+        
     def plot_rlbd_variability(self):
         """
         Plot the cardelli extinction law for several values of Rv.
@@ -615,6 +621,8 @@ class ExtinctionsPlots(object):
         ax.set_xlim(xmin=wlp.min(), xmax=wlp.max())
         ax.set_xlim(xmax=3.29)
 
+        fig.savefig("rlbd_variability.png")
+
     def plot_albd_variability(self):
         """
         Plot the dust cloud transmission as a function of Rv and E(B-V).
@@ -666,6 +674,8 @@ class ExtinctionsPlots(object):
 
         ax.set_ylim(ymin=0, ymax=1.01)
         ax.set_xlim(xmin=self.wavelength.min(), xmax=self.wavelength.max())
+
+        fig.savefig("albd_variability.png")
 
 # Alias
 extinctionParameters = ccm_extinction_parameters
