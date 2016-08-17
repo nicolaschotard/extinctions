@@ -1,6 +1,4 @@
-"""
-Get the reddening E(B-V) for a given set of coordinates
-"""
+"""Get the reddening E(B-V) for a given set of coordinates."""
 
 import os
 import yaml
@@ -13,18 +11,20 @@ from astropy.coordinates import SkyCoord
 
 from Extinction.extern import snfactory, argonaut, others
 
+
 class Reddening(object):
-    """Query reddening from different sources"""
+    
+    """Query reddening from different sources."""
 
     def __init__(self, ra, dec, map_dir=None):
-        """Input are the rad/dec coordinates in degree and a map directory"""
+        """Input are the rad/dec coordinates in degree and a map directory."""
         assert isinstance(ra, type(dec)), 'Coordinate type must be the same (float or list)'
         self.ra = ra if isinstance(ra, list) else [ra]
         self.dec = dec if isinstance(dec, list) else [dec]
         self.coordinates = SkyCoord(ra=ra, dec=dec, unit=degree)
 
         # Convert to galactic coordinates.
-        self.theta = (90.-self.coordinates.galactic.b.degree) * np.pi / 180.
+        self.theta = (90. - self.coordinates.galactic.b.degree) * np.pi / 180.
         self.phi = self.coordinates.galactic.l.degree * np.pi / 180.
 
         # Map directory
@@ -36,7 +36,7 @@ class Reddening(object):
         self._load_maps()
 
     def _load_maps(self):
-        """Load the local maps"""
+        """Load the local maps."""
         if not os.path.exists(self.map_dir + '/maps.yaml'):
             print "ERROR: No maps.yaml file found in", self.map_dir, ". ABORT."
         print "INFO: Loading the maps from local directory", self.map_dir
@@ -58,7 +58,7 @@ class Reddening(object):
                 print ' - ', m, "is loaded"
 
     def from_astroquery(self, dustmap='SFD98'):
-        """Query IRAS using the astropy/astroquery tools (SFD98 or SF11 maps)"""
+        """Query IRAS using the astropy/astroquery tools (SFD98 or SF11 maps)."""
         if len(self.ra) >= 2:
             print "WARNING: This online query is SLOW for several set of coordinates"
         tables = [others.astroquery.get_extinction_table('%.4f %.4f' % (ra, dec))
@@ -69,24 +69,25 @@ class Reddening(object):
             return [np.median(t['A_SandF'] / t['A_over_E_B_V_SandF']) for t in tables]
 
     def from_snfactory(self):
-        """Query on IRSA or NED using code from the SNfactory ToolBox"""
+        """Query on IRSA or NED using code from the SNfactory ToolBox."""
         if len(self.ra) >= 2:
             print "WARNING: This online query is SLOW for several set of coordinates"
         return [snfactory.sfd_ebmv(ra, dec) for ra, dec in zip(self.ra, self.dec)]
 
     def from_sncosmo(self):
-        """Using sncosmo query utilisies on local SFD98 north/south maps"""
+        """Using sncosmo query utilisies on local SFD98 north/south maps."""
         return others.sncosmo.get_ebv_from_map([self.ra, self.dec], mapdir=self.map_dir)
 
     def from_argonaut(self):
-        """Using the distant argonaut query utility"""
+        """Using the distant argonaut query utility."""
         return argonaut.query(self.ra, self.dec, coordsys='equ', mode='sfd')['EBV_SFD']
 
     def query_local_map(self, dustmap='sfd'):
-        """Query one of the local map"""
+        """Query one of the local map."""
         nest = True if dustmap in ['green'] else False
         return healpy.get_interp_val(self.maps[dustmap]['map'],
                                      self.theta, self.phi, nest=nest)
+
 
 def load_map(lmap=0):
     """
@@ -121,30 +122,30 @@ def load_map(lmap=0):
         hmap = lmap['ebv']
     return hmap
 
-def plot_map(map=0):
+
+def plot_map(smap=0):
     """
     Plot a map.
 
-    map is either
+    smap is either
     0: sfd
     1: schlafly
     2: std_s
     3: sfd_n
     """
-    if map == 0:
+    if smap == 0:
         title = 'SFD E(B-V) map'
-    elif map == 1:
+    elif smap == 1:
         title = 'Schlafly E(B-V) map'
 
-    map = load_map(map)
-    healpy.mollview(map, title=title, unit='mag',
+    smap = load_map(smap)
+    healpy.mollview(smap, title=title, unit='mag',
                     norm='hist', min=0, max=0.5, xsize=2000)
     healpy.graticule()
 
-def test_ebm(ra, dec, map=0, nest=False):
-    """
-    Make some tests
-    """
+
+def test_ebm(ra, dec, smap=0, nest=False):
+    """ Make some tests."""
     # Parse input
     coordinates = SkyCoord(ra=ra, dec=dec,
                            unit=degree)
@@ -152,20 +153,20 @@ def test_ebm(ra, dec, map=0, nest=False):
     # Convert to galactic coordinates.
     l = coordinates.galactic.l.degree
     b = coordinates.galactic.b.degree
-    theta = (90.-b) * np.pi / 180.
+    theta = (90. - b) * np.pi / 180.
     phi = l * np.pi / 180.
     print "l, b = %.3f, %.3f" % (l, b)
     print "theta, phi = %.3f, %.3f" % (theta, phi)
-    m = load_map(map)
+    m = load_map(smap)
 
     # from this code
-    if map == 5:
-        nest=True
+    if smap == 5:
+        nest = True
     ebv = healpy.get_interp_val(m, theta, phi, nest=nest)
 
     # from astroquery
     t = others.astroquery.get_extinction_table('%.4f %.4f' % (ra, dec))
-    if map in [0, 2, 3]:
+    if smap in [0, 2, 3]:
         t = t[9]['A_SFD'] / t[9]['A_over_E_B_V_SFD']
     else:
         t = t[9]['A_SandF'] / t[9]['A_over_E_B_V_SandF']
