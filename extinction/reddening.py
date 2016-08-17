@@ -13,7 +13,7 @@ from Extinction.extern import snfactory, argonaut, others
 
 
 class Reddening(object):
-    
+
     """Query reddening from different sources."""
 
     def __init__(self, ra, dec, map_dir=None):
@@ -145,7 +145,7 @@ def plot_map(smap=0):
 
 
 def test_ebm(ra, dec, smap=0, nest=False):
-    """ Make some tests."""
+    """Make some tests."""
     # Parse input
     coordinates = SkyCoord(ra=ra, dec=dec,
                            unit=degree)

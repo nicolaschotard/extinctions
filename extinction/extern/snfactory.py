@@ -1,6 +1,5 @@
 """
 Astronomical info web-based fetchers/parsers.
-=============================================
 
 This code comes from the SNfactory ToolBox (ToolBox.Astro.Fetchers)
 """
@@ -26,7 +25,10 @@ def subdict(dic, keyss=None):
         else:
             yield None
 
+
 xml_keys, xml_info = [], {}
+
+
 def xml_parser(xml, exclude=None):
     """
     Generalized Expat-XML parser to python dict.
@@ -41,7 +43,6 @@ def xml_parser(xml, exclude=None):
     xml_keys, xml_info = [], {}
 
     def start_element(name, attrs):
-        global xml_keys, xml_info
         xml_keys.append(name)
         if name not in exclude:
             # black magic
@@ -66,7 +67,6 @@ def xml_parser(xml, exclude=None):
             xml_keys = xml_keys[:-1]
 
     def char_data(data):
-        global xml_keys, xml_info
         if xml_keys[-1] not in exclude and data.strip() != '':
             sd = list(subdict(xml_info, xml_keys))
             sd[-2][xml_keys[-1]] = data.strip()
@@ -88,7 +88,7 @@ def sfd_ebmv(ra, dec, equinox=2000, obsepoch=None, service='IRSA'):
     """
     Fetch SFD Milky Way E(B-V) from IRSA or NED.
 
-    `IRSA <http://irsa.ipac.caltech.edu/>`_ (slow) 
+    `IRSA <http://irsa.ipac.caltech.edu/>`_ (slow)
     `NED <http://ned.ipac.caltech.edu/>`_.
 
     :param service: can be 'IRSA' or 'NED'
@@ -138,7 +138,13 @@ def sfd_ebmv(ra, dec, equinox=2000, obsepoch=None, service='IRSA'):
                                    ''))
 
         # parse the XML
+        #infos = urllib.urlopen(url).read()
+        #return infos
+        #print infos
+        #p = expat.ParserCreate()
+        #p.Parse(xml)
         infos = xml_parser(urllib.urlopen(url).read())
+        #print infos
         if infos is not None:
             # the other 'result' are not in mag
             mwebv = infos['results']['result'][0]['statistics']['refPixelValueSFD']

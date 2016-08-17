@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""Plot the available extinction laws"""
+"""Plot the available extinction laws."""
 
 import pylab as P
 from Extinction import extinction

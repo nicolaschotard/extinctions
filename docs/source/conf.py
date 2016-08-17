@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-#
+
+"""Configuration file for sphinx."""
+
 # Extinction documentation build configuration file, created by
 # sphinx-quickstart on Thu Aug  4 12:06:33 2016.
 #

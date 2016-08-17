@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+"""Initialize the extinction package."""
+
 import os
 import glob
 
