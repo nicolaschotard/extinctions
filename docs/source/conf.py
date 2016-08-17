@@ -53,7 +53,9 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Extinction'
-copyright = u'2016, N. Chotard'
+# Hack to avoid the "Redefining built-in 'copyright'" error from static
+# analysis tools
+globals()['copyright'] = u'2016, N. Chotard'
 author = u'N. Chotard'
 
 # The version info for the project you're documenting, acts as replacement for

@@ -12,7 +12,7 @@ if __name__ == "__main__":
     EP = extinction.ExtinctionsPlots()
 
     # Plot all the avalaible extinction laws
-    EP.plot_extinctionLaws()
+    EP.plot_extinction_laws()
 
     # Plot other useful figures
     EP.plot_cardelli_law()

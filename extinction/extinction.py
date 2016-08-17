@@ -127,7 +127,7 @@ def extinction_law(lbda, law='OD94', rv=3.1):
     elif law == 'OD94':
         a, b = extinctionParameters(lbda, odonnell=True)
     elif law == 'FM98':
-        a, b = fm99_extinction(lbda, Rv=rv), 0
+        a, b = fm99_extinction(lbda, rv=rv), 0
     else:
         raise ValueError("'law' has to be either CCM89, OD94 or FM98.")
     return a + b / rv
@@ -144,8 +144,8 @@ def extinction_factor(lbda, ebmv, law='OD94', rv=3.1):
     return 10 ** (-0.4 * a * rv * ebmv)   # A_V := R_V * E(B-V)
 
 
-def fm99_extinction(lbda, rv=3.1, LMC2=False, AVGLMC=False, P=None,
-                    k=5, s=None, CCMStyle=True):
+def fm99_extinction(lbda, rv=3.1, lmc2=False, avglmc=False, params=None,
+                    k=5, s=None, ccmstyle=True):
     """
     The R-dependent Galactic extinction curve of Fitzpatrick & Massa.
 
@@ -158,13 +158,13 @@ def fm99_extinction(lbda, rv=3.1, LMC2=False, AVGLMC=False, P=None,
       A(V) / E(B - V).  If not specified, then R = 3.1 Extreme values of R(V)
       range from 2.3 to 5.3
 
-    * AVGLMC - if set, then the default fit parameters c1,c2,c3,c4,gamma,x0 are
+    * avglmc - if set, then the default fit parameters c1,c2,c3,c4,gamma,x0 are
       set to the average values determined for reddening in the general Large
       Magellanic Cloud (LMC) field by Misselt et al.  (1999, ApJ, 515, 128)
 
-    * LMC2 - if set, then the fit parameters are set to the values determined
-      for the LMC2 field (including 30 Dor) by Misselt et al.  Note that
-      neither /AVGLMC or /LMC2 will alter the default value of R_V which is
+    * lmc2 - if set, then the fit parameters are set to the values determined
+      for the lmc2 field (including 30 Dor) by Misselt et al.  Note that
+      neither /avglmc or /lmc2 will alter the default value of R_V which is
       poorly known for the LMC.
 
     The following five input keyword parameters allow the user to customize the
@@ -202,15 +202,15 @@ def fm99_extinction(lbda, rv=3.1, LMC2=False, AVGLMC=False, P=None,
     if type(lbda) in [int, float]:
         lbda = [lbda]
 
-    def FMUV(x, rv):
+    def fmuv(x, rv):
         """Extinction in the ultra-violet."""
         xuv = (x - 5.9) * N.array((x - 5.9) > 0, dtype=int)
-        yuv = P['c1'] + P['c2'] * x + P['c3'] * x ** 2 / \
-              ((x ** 2 - P['x0'] ** 2) ** 2 + (x * P['gamma']) ** 2) + \
-              P['c4'] * (0.5392 * xuv ** 2 + 0.05644 * xuv ** 3) + rv
+        yuv = params['c1'] + params['c2'] * x + params['c3'] * x ** 2 / \
+              ((x ** 2 - params['x0'] ** 2) ** 2 + (x * params['gamma']) ** 2) + \
+              params['c4'] * (0.5392 * xuv ** 2 + 0.05644 * xuv ** 3) + rv
         return yuv
 
-    def FMOP(rv):
+    def fmop(rv):
         """Extinction in the optical."""
         xop = N.array([1.66667, 1.82815, 2.14132, 2.43309])
         yop = [N.polyval([2.13572e-04, 1.00270, -4.22809e-01], rv),
@@ -219,35 +219,35 @@ def fm99_extinction(lbda, rv=3.1, LMC2=False, AVGLMC=False, P=None,
                N.polyval([-4.45636e-05, 7.97809e-04, -5.46959e-03,
                           1.01707, 1.19456], rv)]
         return xop, yop
-    
-    def FMIR(rv):
+
+    def fmir(rv):
         """Extinction in the infra-red"""
         xir = N.array([0.37736, 0.81967])
         yir = N.array([0.26469, 0.82925]) * rv / 3.1
         return xir, yir
 
     # Define parameters for the differentes cases
-    if P is not None:
+    if params is not None:
         keys = ['gamma', 'x0', 'c4', 'c3', 'c2', 'c1']
-        if not all([key in P for key in keys]):
+        if not all([key in params for key in keys]):
             raise KeyError(
-                "P dictionary must have the following keys: %s" % keys)
+                "params dictionary must have the following keys: %s" % keys)
         else:
             print "Use the given set of parameters:"
-    elif LMC2:
-        P = {'gamma': 1.05, 'x0': 4.626, 'c4': 0.42,
-             'c3': 1.92, 'c2': 1.31, 'c1': -2.16}
-        print "Use the LMC2 set of parameters:"
-    elif AVGLMC:
-        P = {'gamma': 0.91, 'x0': 4.596, 'c4': 0.64,
-             'c3': 2.73, 'c2': 1.11, 'c1': -1.28}
-        print "Use the AVGLMC set of parameters:"
+    elif lmc2:
+        params = {'gamma': 1.05, 'x0': 4.626, 'c4': 0.42,
+                  'c3': 1.92, 'c2': 1.31, 'c1': -2.16}
+        print "Use the lmc2 set of parameters:"
+    elif avglmc:
+        params = {'gamma': 0.91, 'x0': 4.596, 'c4': 0.64,
+                  'c3': 2.73, 'c2': 1.11, 'c1': -1.28}
+        print "Use the avglmc set of parameters:"
     else:
         c2 = -0.824 + 4.717 / rv
-        P = {'gamma': 0.99, 'x0': 4.596, 'c4': 0.41,
-             'c3': 3.23, 'c2': c2, 'c1': 2.030 - 3.007 * c2}
+        params = {'gamma': 0.99, 'x0': 4.596, 'c4': 0.41,
+                  'c3': 3.23, 'c2': c2, 'c1': 2.030 - 3.007 * c2}
         print "Use the standard set of parameters for MW:"
-    print '; '.join(["%s=%.2f" % (p, P[p]) for p in P])
+    print '; '.join(["%s=%.2f" % (p, params[p]) for p in params])
 
     # Make sure that the law is constructed over a fair range of wavelength
     rlbda = N.arange(2000, 10000, 1)
@@ -260,24 +260,24 @@ def fm99_extinction(lbda, rv=3.1, LMC2=False, AVGLMC=False, P=None,
 
     # Set the limits
     xcutuv = 3.704
-    iuv, N_UV = x >= xcutuv, x < xcutuv
-    iopir, Nopir = x < xcutuv, x >= xcutuv
+    iuv, n_uv = x >= xcutuv, x < xcutuv
+    iopir, nopir = x < xcutuv, x >= xcutuv
 
     # Compute the NUV extinction
-    if len(x[N_UV]) > 0:
-        extcurve[iuv] = FMUV(x[iuv], rv)
+    if len(x[n_uv]) > 0:
+        extcurve[iuv] = fmuv(x[iuv], rv)
 
     # Compute the OP/IR extinction
-    if len(x[Nopir]) >= 0:
+    if len(x[nopir]) >= 0:
         # For the UV (ref)
         xspluv = N.array([3.704, 3.846])
-        yspluv = FMUV(xspluv, rv)
+        yspluv = fmuv(xspluv, rv)
 
         # For OP
-        xsplop, ysplop = FMOP(rv)
+        xsplop, ysplop = fmop(rv)
 
         # For IR
-        xsplir, ysplir = FMIR(rv)
+        xsplir, ysplir = fmir(rv)
 
         # Make a spline
         spline = interpolate.UnivariateSpline(N.concatenate([[0], xsplir,
@@ -289,7 +289,7 @@ def fm99_extinction(lbda, rv=3.1, LMC2=False, AVGLMC=False, P=None,
         # Save only OP/IR
         extcurve[iopir] = spline(x[iopir])
 
-    if CCMStyle:
+    if ccmstyle:
         # normalization to a CCM law (=1 at lbd=5494.5)
         sp = interpolate.UnivariateSpline(rlbda, extcurve / rv, k=k, s=s)
         return sp(lbda) / sp(5494.5)
@@ -298,8 +298,8 @@ def fm99_extinction(lbda, rv=3.1, LMC2=False, AVGLMC=False, P=None,
         return sp(lbda)
 
 
-def FMUnreddened(lbda, flux, ebmv, rv=3.1, LMC2=False,
-                 AVGLMC=False, k=5, s=None):
+def FMUnreddened(lbda, flux, ebmv, rv=3.1, lmc2=False,
+                 avglmc=False, k=5, s=None):
     """
     Deredden a flux vector using the Fitzpatrick (1999) parameterization.
 
@@ -318,7 +318,7 @@ def FMUnreddened(lbda, flux, ebmv, rv=3.1, LMC2=False,
     :return: unreddened flux vector, same units and number of elements
       as `flux`
     """
-    extcurve = fm99_extinction(lbda, rv=rv, LMC2=LMC2, AVGLMC=AVGLMC, k=k, s=s)
+    extcurve = fm99_extinction(lbda, rv=rv, lmc2=lmc2, avglmc=avglmc, k=k, s=s)
     return flux * 10. ** (0.4 * ebmv * extcurve * rv)
 
 
@@ -458,7 +458,7 @@ class ExtinctionsPlots(object):
     def plot_cardelli_law(self, Rv=3.1, ebmv=0.3):
         """
         Plot the cardelli extinction law for a given Rv, and its constituants
-        a and b. 
+        a and b.
 
         Also plot the interstellar medium transmission for the given
         Rv and E(B-V).
@@ -640,28 +640,24 @@ class ExtinctionsPlots(object):
         ext = []
         colors = self.cmap(N.linspace(0, 1, len(self.Rvs)))
 
-        alphas = [1, 0.9, 0.8]
-        letters = ['a', 'b', 'c']
-        ls = [':', '--', '-']
-
         cst = 0
         for i, rv in enumerate(self.Rvs):
             for j, ebmv in enumerate(self.Ebmvs):
-                extFact = extinction_factor(self.wavelength, ebmv, rv=rv)
-                ax.plot(self.wavelength, extFact, ls=ls[j],
-                        color=colors[i], alpha=alphas[j])
+                extfact = extinction_factor(self.wavelength, ebmv, rv=rv)
+                ax.plot(self.wavelength, extfact, ls=[':', '--', '-'][j],
+                        color=colors[i], alpha=[1, 0.9, 0.8][j])
                 if i == int(len(self.Rvs) / 2):
-                    ex = extinction_factor(3100, ebmv, rv=rv)
-                    ax.annotate(r'$(%s)$' % letters[j],
-                                xy=(3100, ex), xycoords='data', color='k',
+                    ax.annotate(r'$(%s)$' % ['a', 'b', 'c'][j],
+                                xy=(3100, extinction_factor(3100, ebmv, rv=rv)),
+                                xycoords='data', color='k',
                                 horizontalalignment='left',
                                 verticalalignment='center', size='medium')
-                    ax.annotate(r'$(%s)$ E(B-V)=%.2f' % (letters[j], ebmv),
+                    ax.annotate(r'$(%s)$ E(B-V)=%.2f' % (['a', 'b', 'c'][j], ebmv),
                                 xy=(7400, 0.15 - cst), xycoords='data',
                                 color='k', size='medium')
                     cst += 0.05
 
-            ext.append(extFact[0])
+            ext.append(extfact[0])
 
         scat = ax.scatter([self.wavelength[0]] * self.num, ext,
                           c=self.Rvs, cmap=(self.cmap), visible=False,
