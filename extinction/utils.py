@@ -1,4 +1,4 @@
-"""Some utilities"""
+"""Some utilities."""
 
 import pylab as P
 import numpy as N

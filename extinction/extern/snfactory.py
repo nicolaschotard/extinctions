@@ -1,8 +1,6 @@
 """
-.. _snfactory:
-
-Astronomical info web-based fetchers/parsers
-============================================
+Astronomical info web-based fetchers/parsers.
+=============================================
 
 This code comes from the SNfactory ToolBox (ToolBox.Astro.Fetchers)
 """
@@ -13,10 +11,9 @@ import urllib
 import re
 from astropy.coordinates import SkyCoord
 
+
 def subdict(dic, keyss=None):
-    """
-    Iterate sub-dicts of a dict by key list
-    """
+    """Iterate sub-dicts of a dict by key list."""
     if keyss is None:
         keyss = []
     yield dic
@@ -29,9 +26,10 @@ def subdict(dic, keyss=None):
         else:
             yield None
 
+xml_keys, xml_info = [], {}
 def xml_parser(xml, exclude=None):
     """
-    Generalized Expat-XML parser to python dict
+    Generalized Expat-XML parser to python dict.
 
     :param exclude: XML keys to explicitely exclude
     """
@@ -39,15 +37,15 @@ def xml_parser(xml, exclude=None):
 
     if exclude is None:
         exclude = []
-    global keys, info
-    keys, info = [], {}
+    global xml_keys, xml_info
+    xml_keys, xml_info = [], {}
 
     def start_element(name, attrs):
-        global keys, info
-        keys.append(name)
+        global xml_keys, xml_info
+        xml_keys.append(name)
         if name not in exclude:
             # black magic
-            sd = list(subdict(info, keys))
+            sd = list(subdict(xml_info, xml_keys))
             # new key
             if sd[-1] is None:
                 # add to a sub-dict
@@ -63,15 +61,15 @@ def xml_parser(xml, exclude=None):
                     sd[-2][name] = [sd[-2][name], attrs]
 
     def end_element(name):
-        global keys
-        if keys[-1] == name:
-            keys = keys[:-1]
+        global xml_keys
+        if xml_keys[-1] == name:
+            xml_keys = xml_keys[:-1]
 
     def char_data(data):
-        global keys, info
-        if keys[-1] not in exclude and data.strip() != '':
-            sd = list(subdict(info, keys))
-            sd[-2][keys[-1]] = data.strip()
+        global xml_keys, xml_info
+        if xml_keys[-1] not in exclude and data.strip() != '':
+            sd = list(subdict(xml_info, xml_keys))
+            sd[-2][xml_keys[-1]] = data.strip()
 
     p = expat.ParserCreate()
     p.StartElementHandler = start_element
@@ -83,17 +81,18 @@ def xml_parser(xml, exclude=None):
     except expat.ExpatError:
         return None
 
-    return info
+    return xml_info
+
 
 def sfd_ebmv(ra, dec, equinox=2000, obsepoch=None, service='IRSA'):
     """
-    Fetch SFD Milky Way E(B-V) from `IRSA
-    <http://irsa.ipac.caltech.edu/>`_ (slow) or `NED
-    <http://ned.ipac.caltech.edu/>`_.
+    Fetch SFD Milky Way E(B-V) from IRSA or NED.
+
+    `IRSA <http://irsa.ipac.caltech.edu/>`_ (slow) 
+    `NED <http://ned.ipac.caltech.edu/>`_.
 
     :param service: can be 'IRSA' or 'NED'
     """
-
     assert equinox in [1950, 2000], 'equinox should be 1950 or 2000'
 
     if obsepoch is None:
