@@ -631,7 +631,7 @@ class ExtinctionsPlots(object):
         print """
         Dust cloud transmission variablitiy as a function of Rv and E(B-V).
         A degeneracy between the Rv and E(B-V) variabilities can be seen
-        in the IR.\n""")
+        in the IR.\n"""
 
         ax = fig.add_axes([0.10, 0.09, 0.9, 0.89],
                           xlabel=r'$\lambda$ [$\AA$]',
