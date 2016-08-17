@@ -1,8 +1,6 @@
 """
-.. _extinction:
-
-Extinction.extinction - Set of extinction laws
-==============================================
+Extinction.extinction - Set of extinction laws.
+===============================================
 
 References:
 
@@ -29,10 +27,10 @@ def CCMextinctionParameters(lbda, odonnell=True):
     """
     Extinction law parameters a(lbda),b(lbda).
 
-    To be used in A(lambda)/A(V) = a(lbda) + b(lbda)/Rv for lbda [A] in the 
+    To be used in A(lambda)/A(V) = a(lbda) + b(lbda)/Rv for lbda [A] in the
     1000 A-33 microns range (for a V-filter centered on 5494.5 A). R(V):=A(V)/E(B-V)
-    ranges from 2.75 to 5.3, Rv=3.1 being the canonical Milky Way value. 
-    Uses expressions from 
+    ranges from 2.75 to 5.3, Rv=3.1 being the canonical Milky Way value.
+    Uses expressions from
     `Cardelli, Clayton and Mathis
     <http://adsabs.harvard.edu/abs/1989ApJ...345..245C>`_, with optical/NIR
     part updated from `O'Donnell
@@ -40,7 +38,6 @@ def CCMextinctionParameters(lbda, odonnell=True):
 
     Set `odonnel` to False to use the original CCM89 expression.
     """
-
     def cardelli_ir(x):
         """A/Av in InfraRed: 0.3-1.1 micron^-1."""
         assert ((x >= 0.3) & (x <= 1.1)).all()
@@ -116,7 +113,7 @@ def odonnell_opt(x):
     return a, b
 
 
-def extinction_law(lbda, law='OD94', Rv=3.1):
+def extinction_law(lbda, law='OD94', rv=3.1):
     """
     Return extinction law A(lbda)/Av for a given value of Rv and a given extinction law.
 
@@ -125,27 +122,26 @@ def extinction_law(lbda, law='OD94', Rv=3.1):
     * OD94: `O'Donnell <http://adsabs.harvard.edu/abs/1994ApJ...422..158O>`_
     * FM98: Fitzpatrick & Massa (1998)
     """
-
     if law == 'CCM89':
         a, b = extinctionParameters(lbda, odonnell=False)
     elif law == 'OD94':
         a, b = extinctionParameters(lbda, odonnell=True)
     elif law == 'FM98':
-        a, b = FMExtinction(lbda, Rv=Rv), 0
+        a, b = fm99_extinction(lbda, Rv=rv), 0
     else:
         raise ValueError("'law' has to be either CCM89, OD94 or FM98.")
-    return a + b / Rv
+    return a + b / rv
 
 
-def extinction_factor(lbda, ebmv, law='OD94', Rv=3.1):
+def extinction_factor(lbda, ebmv, law='OD94', rv=3.1):
     """
     Return extinction factor.
 
-    In [0,1], actually more like a transmission factor) for E(B-V). Based on an 
+    In [0,1], actually more like a transmission factor) for E(B-V). Based on an
     extinction law for Rv. See :func:`extinction_law` for available extinction laws.
     """
-    a = extinction_law(lbda, law=law, Rv=Rv)      # A(lambda)/A_V
-    return 10 ** (-0.4 * a * Rv * ebmv)   # A_V := R_V * E(B-V)
+    a = extinction_law(lbda, law=law, rv=rv)      # A(lambda)/A_V
+    return 10 ** (-0.4 * a * rv * ebmv)   # A_V := R_V * E(B-V)
 
 
 def fm99_extinction(lbda, rv=3.1, LMC2=False, AVGLMC=False, P=None,
@@ -207,6 +203,7 @@ def fm99_extinction(lbda, rv=3.1, LMC2=False, AVGLMC=False, P=None,
         lbda = [lbda]
 
     def FMUV(x, rv):
+        """Extinction in the ultra-violet."""
         xuv = (x - 5.9) * N.array((x - 5.9) > 0, dtype=int)
         yuv = P['c1'] + P['c2'] * x + P['c3'] * x ** 2 / \
               ((x ** 2 - P['x0'] ** 2) ** 2 + (x * P['gamma']) ** 2) + \
@@ -214,6 +211,7 @@ def fm99_extinction(lbda, rv=3.1, LMC2=False, AVGLMC=False, P=None,
         return yuv
 
     def FMOP(rv):
+        """Extinction in the optical."""
         xop = N.array([1.66667, 1.82815, 2.14132, 2.43309])
         yop = [N.polyval([2.13572e-04, 1.00270, -4.22809e-01], rv),
                N.polyval([-7.35778e-05, 1.00216, -5.13540e-02], rv),
@@ -221,8 +219,9 @@ def fm99_extinction(lbda, rv=3.1, LMC2=False, AVGLMC=False, P=None,
                N.polyval([-4.45636e-05, 7.97809e-04, -5.46959e-03,
                           1.01707, 1.19456], rv)]
         return xop, yop
-
+    
     def FMIR(rv):
+        """Extinction in the infra-red"""
         xir = N.array([0.37736, 0.81967])
         yir = N.array([0.26469, 0.82925]) * rv / 3.1
         return xir, yir
@@ -320,7 +319,7 @@ def FMUnreddened(lbda, flux, ebmv, rv=3.1, LMC2=False,
       as `flux`
     """
     extcurve = fm99_extinction(lbda, rv=rv, LMC2=LMC2, AVGLMC=AVGLMC, k=k, s=s)
-    return flux * 10. ** (0.4 * ebmv * extcurve * Rv)
+    return flux * 10. ** (0.4 * ebmv * extcurve * rv)
 
 
 # Goobar08 extinction law
@@ -336,7 +335,7 @@ def goobar08_law(lbd, lbdref, a, p):
 
 def ap_to_rv(a, p, r=0.8):
     """
-    Goobar 08 extinction parameters convertion. 
+    Goobar 08 extinction parameters convertion.
 
     a and p are the parameters of the goobar08 extinction law r is the ratio
     between the mean wavelegnths of the B and the V filter
@@ -385,7 +384,7 @@ class ExtinctionsPlots(object):
         for m in f:
             getattr(self, m)()
 
-    def plot_extinctionLaws(self):
+    def plot_extinction_laws(self):
         """
         Plot all the avalaible extinction laws from extinction.py.
 
@@ -404,38 +403,38 @@ class ExtinctionsPlots(object):
         # Compute the goobar extinction law
         a, p = 0.9, -1.5  # Set the values for the MW dust
         Gext = goobar08_law(self.wavelength, self.ref_wavelengths['V'], a, p)
-        print("""
+        print """
         %s
         Set the values for the MW dust:
         a = %.2f ; p = %.2f
         Corresponding: Rv =%.2f
-        """ % (gl, a, p, ap_to_rv(a, p)))
+        """ % (gl, a, p, ap_to_rv(a, p))
 
         # Compute the CCM extinction law
         cl = "CCM law".center(30, '-')
-        print("""
+        print """
         %s
         CCM law for Rv = 3.1
         CCM law for Rv = %.1f
-        """ % (cl, ap_to_rv(a, p)))
+        """ % (cl, ap_to_rv(a, p))
         CCMext = extinction_law(self.wavelength, law='CCM89')
-        CCMgoob = extinction_law(
-            self.wavelength, Rv=ap_to_rv(a, p), law='CCM89')
+        CCMgoob = extinction_law(self.wavelength,
+                                 rv=ap_to_rv(a, p), law='CCM89')
 
         # Compute the FM extinction law
         fl = "Fitzpatrick law".center(30, '-')
-        print("""
+        print """
         %s
         Fitzpatrick law for Rv = 3.1
-        """ % (fl))
+        """ % (fl)
         FMext = fm99_extinction(self.wavelength)
 
         # Compute the O'Donnel extinction law
         ol = "O'Donnel 94 law".center(30, '-')
-        print("""
+        print """
         %s
         O'Donnel 94 law for Rv = 3.1\n
-        """ % ol)
+        """ % ol
         ODext = extinction_law(self.wavelength, law='OD94')
 
         # Make a figure
@@ -459,18 +458,20 @@ class ExtinctionsPlots(object):
     def plot_cardelli_law(self, Rv=3.1, ebmv=0.3):
         """
         Plot the cardelli extinction law for a given Rv, and its constituants
-        a and b. Plot also the interstellar medium transmission for the given
+        a and b. 
+
+        Also plot the interstellar medium transmission for the given
         Rv and E(B-V).
         """
         fig = pylab.figure(dpi=self.dpi)
-        print(("Figure %i: Cardelli extinction law" %
-               (fig.number)).center(80, '='))
-        print("""
+        print ("Figure %i: Cardelli extinction law" %
+               (fig.number)).center(80, '=')
+        print"""
         Top panel: Cardelli extinction law parammeters a and b (top pannel).
         Bottom panel:
         - CCM extinction law as A(lbd)/Av = a+b/Rv for Rv = %.2f
         - Interstellar medium transmission for Rv = %.2f and E(B-V) = %.2f.\n
-        """ % (Rv, Rv, ebmv))
+        """ % (Rv, Rv, ebmv)
 
         # Create the figure and axes
         ax1 = fig.add_axes([0.06, 0.51, 0.92, 0.42],
@@ -481,8 +482,8 @@ class ExtinctionsPlots(object):
 
         # Get the extinction parameters, law and factor (transmission)
         a, b = extinctionParameters(self.wavelength)
-        extLaw = extinction_law(self.wavelength, Rv=Rv)
-        extFactor = extinction_factor(self.wavelength, ebmv, Rv=Rv)
+        extLaw = extinction_law(self.wavelength, rv=Rv)
+        extFactor = extinction_factor(self.wavelength, ebmv, rv=Rv)
 
         # Plot them, adn set the labels
         ax1.plot(self.wavelength, a, 'y', lw=1.5, label=r'$a_{\lambda}$')
@@ -491,7 +492,7 @@ class ExtinctionsPlots(object):
                  label=r'$A_{\lambda}/A_{V}$ ($=a_{\lambda}+b_{\lambda}/R_V$)')
         ax2.plot(self.wavelength, extFactor, 'r', lw=1.5,
                  label=r'$T_{\lambda}$ ($=10^{-0.4 \times R_V \times '
-                 'E(B-V) \times A_{\lambda}/A_V }$)')
+                 r'E(B-V) \times A_{\lambda}/A_V }$)')
 
         # Add lines and annotations about reference filter postions
         ax1.axvline(self.ref_wavelengths['B'], ls=':', color='k', lw=0.8)
@@ -524,14 +525,15 @@ class ExtinctionsPlots(object):
     def plot_cardelli_law_variability(self):
         """
         Plot the cardelli extinction law for several values of Rv.
+
         Expressed as Rlbd-Rv as a function of the inverse wavelength.
         """
         fig = pylab.figure(dpi=self.dpi)
-        print(("Figure %i: CCM law variability (A(lbd)/Av)"
-               % (fig.number)).center(80, '='))
-        print("""
+        print ("Figure %i: CCM law variability (A(lbd)/Av)"
+               % (fig.number)).center(80, '=')
+        print """
         Cardelli extinction law for several values of Rv. This figure express
-        the extinction law variability as a function af Rv.\n""")
+        the extinction law variability as a function af Rv.\n"""
 
         ax = fig.add_axes([0.10, 0.09, 0.9, 0.89],
                           xlabel=r'$\lambda$ [$\AA$]',
@@ -540,7 +542,7 @@ class ExtinctionsPlots(object):
         ext = []
         colors = self.cmap(N.linspace(0, 1, len(self.Rvs)))
         for i, rv in enumerate(self.Rvs):
-            extLaw = extinction_law(self.wavelength, Rv=rv)
+            extLaw = extinction_law(self.wavelength, rv=rv)
             ax.plot(self.wavelength, extLaw, color=colors[i])
             ext.append(extLaw[0])
         scat = ax.scatter([self.wavelength[0]] * self.num,
@@ -562,16 +564,17 @@ class ExtinctionsPlots(object):
         ax.set_ylim(ymin=0.05, ymax=4)
         ax.set_xlim(xmin=self.wavelength.min(), xmax=self.wavelength.max())
 
-    def plot_rlbd_variability(self, Rv=3.1, ebmv=0.3):
+    def plot_rlbd_variability(self):
         """
         Plot the cardelli extinction law for several values of Rv.
+
         The figure express the extinction law variability as a function af Rv.
         """
         fig = pylab.figure(dpi=self.dpi)
-        print(("Figure %i: CCM law variability (R(lbd)-Rv)" %
-               (fig.number)).center(80, '='))
-        print("""
-        CCM law expressed as R(lbd)-Rv for several values of Rv.\n""")
+        print ("Figure %i: CCM law variability (R(lbd)-Rv)" %
+               (fig.number)).center(80, '=')
+        print """
+        CCM law expressed as R(lbd)-Rv for several values of Rv.\n"""
 
         # Create the figure and axe
         ax = fig.add_axes([0.10, 0.09, 0.9, 0.89],
@@ -582,11 +585,10 @@ class ExtinctionsPlots(object):
         wlp = 1e4 / self.wavelength
         refV = 1e4 / self.ref_wavelengths['V']
         refB = 1e4 / self.ref_wavelengths['B']
-        lbd = 1e4 / 9500
 
         colors = self.cmap(N.linspace(0, 1, len(self.Rvs)))
         for i, rv in enumerate(self.Rvs):
-            extLaw = rv * (extinction_law(self.wavelength, Rv=rv) - 1)
+            extLaw = rv * (extinction_law(self.wavelength, rv=rv) - 1)
             ax.plot(wlp, extLaw, color=colors[i])
             ext.append(extLaw[0])
         scat = ax.scatter([wlp[0]] * self.num, ext, c=self.Rvs,
@@ -617,15 +619,16 @@ class ExtinctionsPlots(object):
     def plot_albd_variability(self):
         """
         Plot the dust cloud transmission as a function of Rv and E(B-V).
+
         This figure express the variablitiy of the transmission as function
         of these two parameters. A degeneracy between the Rv and E(B-V)
         variabilities can be seen in the IR.
         """
 
         fig = pylab.figure(dpi=self.dpi)
-        print(("Figure %i: Transmission variability" %
-               (fig.number)).center(80, '='))
-        print("""
+        print ("Figure %i: Transmission variability" %
+               (fig.number)).center(80, '=')
+        print """
         Dust cloud transmission variablitiy as a function of Rv and E(B-V).
         A degeneracy between the Rv and E(B-V) variabilities can be seen
         in the IR.\n""")
@@ -633,7 +636,7 @@ class ExtinctionsPlots(object):
         ax = fig.add_axes([0.10, 0.09, 0.9, 0.89],
                           xlabel=r'$\lambda$ [$\AA$]',
                           ylabel=r'$T_{\lambda}$ ($=10^{-0.4 \times '
-                          'R_V \times E(B-V) \times A_{\lambda}/A_V }$)')
+                          r'R_V \times E(B-V) \times A_{\lambda}/A_V }$)')
         ext = []
         colors = self.cmap(N.linspace(0, 1, len(self.Rvs)))
 
@@ -644,11 +647,11 @@ class ExtinctionsPlots(object):
         cst = 0
         for i, rv in enumerate(self.Rvs):
             for j, ebmv in enumerate(self.Ebmvs):
-                extFact = extinction_factor(self.wavelength, ebmv, Rv=rv)
+                extFact = extinction_factor(self.wavelength, ebmv, rv=rv)
                 ax.plot(self.wavelength, extFact, ls=ls[j],
                         color=colors[i], alpha=alphas[j])
                 if i == int(len(self.Rvs) / 2):
-                    ex = extinction_factor(3100, ebmv, Rv=rv)
+                    ex = extinction_factor(3100, ebmv, rv=rv)
                     ax.annotate(r'$(%s)$' % letters[j],
                                 xy=(3100, ex), xycoords='data', color='k',
                                 horizontalalignment='left',
