@@ -395,7 +395,7 @@ class ExtinctionsPlots(object):
         - The O'Donnel extinction law
         """
         fig = pylab.figure(dpi=100)
-        print "Figure %i: Extinction laws" % (fig.number)).center(80, '=')
+        print ("Figure %i: Extinction laws" % (fig.number)).center(80, '=')
         print """
         Avalaible extinction laws from extinction.py
         """
