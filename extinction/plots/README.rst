@@ -1,8 +1,5 @@
-Figures
--------
-
-Figure 1: Extinction laws
-`````````````````````````
+Extinction laws
+---------------
 
 Avalaible extinction laws from extinction.py
        
@@ -27,8 +24,8 @@ Avalaible extinction laws from extinction.py
 
 .. image:: extinction_laws.png
     
-Figure 2: Cardelli extinction law
-`````````````````````````````````
+CCM89 extinction law
+--------------------
 
 - Top panel: Cardelli extinction law parammeters a and b (top pannel).
 - Bottom panel:
@@ -38,23 +35,23 @@ Figure 2: Cardelli extinction law
 
 .. image:: ccm_law.png
         
-Figure 3: CCM law variability (A(lbd)/Av)
-`````````````````````````````````````````
+A(lbd)/Av variability
+---------------------
 
 Cardelli extinction law for several values of Rv. This figure express
 the extinction law variability as a function af Rv.
 
 .. image:: ccm_law_variability.png
 
-Figure 4: CCM law variability (R(lbd)-Rv)
-`````````````````````````````````````````
+R(lbd)-Rv variability
+---------------------
 
 CCM law expressed as R(lbd)-Rv for several values of Rv.
 
 .. image:: rlbd_variability.png
 
-Figure 5: Transmission variability
-``````````````````````````````````
+Transmission variability
+------------------------
 
 Dust cloud transmission variablitiy as a function of Rv and E(B-V). A
 degeneracy between the Rv and E(B-V) variabilities can be seen in the

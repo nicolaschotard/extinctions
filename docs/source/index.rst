@@ -10,7 +10,13 @@ Welcome to Extinction's documentation!
    :maxdepth: 2
    :caption: General
 
-   readme   
+   readme
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Figures
+
+   figures
    
 .. toctree::
    :maxdepth: 3
