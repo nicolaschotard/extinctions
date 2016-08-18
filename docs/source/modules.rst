@@ -1,3 +1,6 @@
+extinction
+==========
+
 .. toctree::
    :maxdepth: 4
 
