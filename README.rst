@@ -147,10 +147,3 @@ You can then get the E(B-V) from different sources::
   Downloading http://irsa.ipac.caltech.edu//workspace/TMP_XG1Joz_30445/DUST/340.8300_-9.5900.v0001/extinction.tbl
   |==============================================================================================| 4.3k/4.3k (100.00%)         0s
   Out[7]: [0.047377326565143825]
-
-TODO
-----
-
-- Errors on E(B-V) are available for a few maps, but not yet accessible here. But this will come soon.
-- A few extinction laws are already available, but not yet fully tested nor interfaced with the E(B-V) query tools.
-- A set of magnitudes systems has to be implemented (started in `utils.py` for now). 
