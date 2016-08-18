@@ -11,7 +11,7 @@ Welcome to Extinction's documentation!
    :caption: General
 
    readme
-
+   
 .. toctree::
    :maxdepth: 3
    :caption: Code description
