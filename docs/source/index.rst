@@ -6,6 +6,8 @@
 Welcome to Extinction's documentation!
 ======================================
 
+.. warning:: Package under development
+
 .. toctree::
    :maxdepth: 2
    :caption: General
