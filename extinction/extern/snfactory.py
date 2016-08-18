@@ -138,13 +138,7 @@ def sfd_ebmv(ra, dec, equinox=2000, obsepoch=None, service='IRSA'):
                                    ''))
 
         # parse the XML
-        #infos = urllib.urlopen(url).read()
-        #return infos
-        #print infos
-        #p = expat.ParserCreate()
-        #p.Parse(xml)
         infos = xml_parser(urllib.urlopen(url).read())
-        #print infos
         if infos is not None:
             # the other 'result' are not in mag
             mwebv = infos['results']['result'][0]['statistics']['refPixelValueSFD']

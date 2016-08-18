@@ -1,9 +1,12 @@
 """
-From http://argonaut.skymaps.info/usage#function-call, with a few modifications to handle large query
+From http://argonaut.skymaps.info/usage#function-call. 
+
+With a few modifications to handle large query.
 """
 
 import json
 import requests
+
 
 def query(lon, lat, coordsys='gal', mode='full', limit=500000):
     """
@@ -40,14 +43,10 @@ def query(lon, lat, coordsys='gal', mode='full', limit=500000):
 
     # Make sure to have less than 500000 objects (the limit).
     # Cut the list in smaller pieces if that is the case.
-    def chunk(ilist, length):
-        """Divide a list 'l' into smaller lists of maximal length 'num'."""
-        return [ilist[i:i + length] for i in range(0, len(ilist), length)]
-
     if len(lon) >= limit:
-        lons = chunk(lon, limit - 1)
-        lats = chunk(lat, limit - 1)
-        dicts = [query(loni, lati, coordsys=coordsys, mode=mode) for loni, lati in zip(lons, lats)]
+        dicts = [query(loni, lati, coordsys=coordsys, mode=mode)
+                 for loni, lati in zip(chunk(lon, limit - 1),
+                                       chunk(lat, limit - 1))]
         for dic in dicts[1:]:
             for k in dic:
                 dicts[0][k].extend(dic[k])
@@ -72,3 +71,7 @@ def query(lon, lat, coordsys='gal', mode='full', limit=500000):
         raise excep
 
     return json.loads(req.text)
+
+def chunk(ilist, length):
+    """Divide a list into smaller lists of maximal length."""
+    return [ilist[i:i + length] for i in range(0, len(ilist), length)]

@@ -419,7 +419,7 @@ class ExtinctionsPlots(object):
         """ % (cl, ap_to_rv(a, p))
         ccm_ext = extinction_law(self.wavelength, law='CCM89')
         ccm_goob = extinction_law(self.wavelength,
-                                 rv=ap_to_rv(a, p), law='CCM89')
+                                  rv=ap_to_rv(a, p), law='CCM89')
 
         # Compute the FM extinction law
         fl = "Fitzpatrick law".center(30, '-')
@@ -568,7 +568,7 @@ class ExtinctionsPlots(object):
         ax.set_xlim(xmin=self.wavelength.min(), xmax=self.wavelength.max())
 
         fig.savefig('ccm_law_variability.png')
-        
+
     def plot_rlbd_variability(self):
         """
         Plot the cardelli extinction law for several values of Rv.
