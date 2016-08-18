@@ -12,7 +12,6 @@ def query(lon, lat, coordsys='gal', mode='full', limit=500000):
     """
     Send a line-of-sight reddening query to the Argonaut web server.
 
-
     lon, lat: longitude and latitude, in degrees.
     coordsys: 'gal' for Galactic, 'equ' for Equatorial (J2000).
     mode: 'full', 'lite' or 'sfd'

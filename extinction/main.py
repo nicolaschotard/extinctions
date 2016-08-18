@@ -39,7 +39,6 @@ def get_maps(argv=None):
     """Download dust maps."""
     description = """Download dust maps."""
     prog = "get_maps.py"
-    usage = """usage: %s [options]""" % prog
 
     parser = ArgumentParser(prog=prog, description=description)
     parser.add_argument("--outdir",
@@ -114,20 +113,19 @@ def get_maps(argv=None):
 
 def extinction_plots():
     """Plot the available extinction laws."""
-
     print "\nUse extinction.py to plot the extinction laws.\n"
 
-    EP = extinction.ExtinctionsPlots()
+    eplot = extinction.ExtinctionsPlots()
 
     # Plot all the avalaible extinction laws
-    EP.plot_extinction_laws()
+    eplot.plot_extinction_laws()
 
     # Plot other useful figures
-    EP.plot_cardelli_law()
-    EP.plot_cardelli_law_variability()
-    EP.plot_rlbd_variability()
-    EP.plot_albd_variability()
+    eplot.plot_cardelli_law()
+    eplot.plot_cardelli_law_variability()
+    eplot.plot_rlbd_variability()
+    eplot.plot_albd_variability()
 
-    # See also EP.plot_all_figures()
+    # See also eplot.plot_all_figures()
 
     extinction.pylab.show()
