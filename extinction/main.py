@@ -9,13 +9,14 @@ from argparse import ArgumentParser
 from pkg_resources import resource_filename
 from shutil import copy2
 
+from Extinction import extinction
 
 # Download the dust maps
 
 
 def download(url, out, update=False):
     """Download a file in an output directory (force with update)."""
-    local_path = out+"/"+os.path.basename(url)
+    local_path = out + "/" + os.path.basename(url)
     if os.path.exists(local_path):
         if update:
             os.remove(local_path)
@@ -39,7 +40,7 @@ def get_maps(argv=None):
     description = """Download dust maps."""
     prog = "get_maps.py"
     usage = """usage: %s [options]""" % prog
-    
+
     parser = ArgumentParser(prog=prog, description=description)
     parser.add_argument("--outdir",
                         help="Output directory in where to put the dust maps")
@@ -50,7 +51,7 @@ def get_maps(argv=None):
     parser.add_argument("--select", help="Select maps to download (coma separated)")
     parser.add_argument("--exclude", help="Exclude map(s) (coma separated)."
                         "If the select option is used, the exclude option will be ignored.")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     if args.outdir is not None:
         outdir = os.path.abspath(args.outdir)
@@ -74,7 +75,7 @@ def get_maps(argv=None):
     copy2(m, outdir)
 
     # Now get all or part of the maps
-    maps = yaml.load(open(outdir+"/maps.yaml"))
+    maps = yaml.load(open(outdir + "/maps.yaml"))
 
     # List the maps
     if args.list:
@@ -95,7 +96,7 @@ def get_maps(argv=None):
 
     # Check if some maps are already present
     for m in maps.keys():
-        path = outdir+"/"+os.path.basename(maps[m]['url'])
+        path = outdir + "/" + os.path.basename(maps[m]['url'])
         if os.path.exists(path):
             print " File", path, "already exist."
             maps.pop(m)
@@ -106,3 +107,27 @@ def get_maps(argv=None):
 
     for m in sorted(maps):
         download(maps[m]['url'], outdir)
+
+
+# Make plots
+
+
+def extinction_plots():
+    """Plot the available extinction laws."""
+
+    print "\nUse extinction.py to plot the extinction laws.\n"
+
+    EP = extinction.ExtinctionsPlots()
+
+    # Plot all the avalaible extinction laws
+    EP.plot_extinction_laws()
+
+    # Plot other useful figures
+    EP.plot_cardelli_law()
+    EP.plot_cardelli_law_variability()
+    EP.plot_rlbd_variability()
+    EP.plot_albd_variability()
+
+    # See also EP.plot_all_figures()
+
+    extinction.pylab.show()
