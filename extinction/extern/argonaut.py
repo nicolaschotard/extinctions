@@ -1,5 +1,5 @@
 """
-From http://argonaut.skymaps.info/usage#function-call. 
+From http://argonaut.skymaps.info/usage#function-call.
 
 With a few modifications to handle large query.
 """
@@ -71,6 +71,7 @@ def query(lon, lat, coordsys='gal', mode='full', limit=500000):
         raise excep
 
     return json.loads(req.text)
+
 
 def chunk(ilist, length):
     """Divide a list into smaller lists of maximal length."""
