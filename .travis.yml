@@ -3,6 +3,7 @@ language: python
 cache:
   - pip
   - directories:
+    - $HOME/miniconda/
     - $HOME/.extinction/maps/
 
 python:
@@ -36,7 +37,6 @@ script:
   - coverage run --source="./" setup.py test
   - coverage run -a --source="./" extinction/*py
   - coverage run -a --source="./" extinction/extern/*py
-  - coverage run -a --source="./" scripts/*.py
 after_success:
   - codecov
   - coveralls
