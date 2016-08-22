@@ -22,8 +22,10 @@ install:
   - python setup.py install
 # command to run tests
 script:
-  #- coverage run --source="./" setup.py test
-  - coverage run --source="./" extinction/*py extinction/extern/*py scripts/*.py
+  - coverage run --source="./" setup.py test
+  - coverage run -a --source="./" extinction/*py
+  - coverage run -a --source="./" extinction/extern/*py
+  - coverage run -a --source="./" scripts/*.py
 after_success:
   - codecov
   - coveralls

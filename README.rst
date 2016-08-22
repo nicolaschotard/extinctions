@@ -10,6 +10,9 @@
    :target: https://travis-ci.org/nicolaschotard/Extinction
    :alt: Travis CI build status (Linux)
 
+.. image:: https://codecov.io/gh/nicolaschotard/Extinction/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/nicolaschotard/Extinction	 
+
 ____
 
 **WARNING**: Package under development
