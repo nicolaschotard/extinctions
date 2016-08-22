@@ -7,3 +7,4 @@ pyyaml
 astropy
 requests
 pytest
+astroquery
