@@ -18,9 +18,9 @@ class Reddening(object):
 
     def __init__(self, ra, dec, map_dir=None):
         """Input are the rad/dec coordinates in degree and a map directory."""
-        assert isinstance(ra, type(dec)), 'Coordinate type must be the same (float or list)'
         self.ra = ra if isinstance(ra, list) else [ra]
         self.dec = dec if isinstance(dec, list) else [dec]
+        assert len(self.ra) == len(self.dec)
         self.coordinates = SkyCoord(ra=ra, dec=dec, unit=degree)
 
         # Convert to galactic coordinates.
