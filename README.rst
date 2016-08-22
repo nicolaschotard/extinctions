@@ -68,6 +68,18 @@ In the future, release versions will be listed at this `location
 <http://github.com/nicolaschotard/Extinction/releases>`_.
 
 
+Dependencies
+------------
+
+`Extinction` has a few python dependencies:
+
+- numpy
+- matplotlib
+- seaborn
+- astropy / astroquery  
+- healpy
+
+  
 Dust map setup
 --------------
 
@@ -87,17 +99,6 @@ Available dust maps are for now:
 - `Schlafly 2014 <http://lambda.gsfc.nasa.gov/product/foreground/fg_ebv_map_info.cfm>`_
 - `Green 2015 <http://lambda.gsfc.nasa.gov/product/foreground/fg_ebv_2015_map_info.cfm>`_
 
-
-Dependencies
-------------
-
-`Extinction` has a few python dependencies:
-
-- numpy
-- matplotlib
-- seaborn
-- astropy / astroquery  
-- healpy
 
 Usage
 -----
