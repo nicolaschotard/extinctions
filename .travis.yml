@@ -1,4 +1,9 @@
 language: python
+
+cache: pip
+  directories:
+  - $HOME/.extinction/maps/
+
 python:
   # We don't actually use the Travis Python, but this keeps it organized.
   - "2.7"
@@ -23,12 +28,14 @@ install:
   - pip install sncosmo
   - pip install wget
   - python setup.py install
+  
 # command to run tests
 script:
   - coverage run --source="./" setup.py test
   - coverage run -a --source="./" extinction/*py
   - coverage run -a --source="./" extinction/extern/*py
   - coverage run -a --source="./" scripts/*.py
+  - get_maps.py
 after_success:
   - codecov
   - coveralls
