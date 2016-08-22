@@ -8,3 +8,4 @@ astropy
 requests
 pytest
 astroquery
+sncosmo
