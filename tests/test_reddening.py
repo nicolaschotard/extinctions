@@ -1,4 +1,4 @@
-"""Test the reddening module"""
+"""Test the reddening module."""
 
 import pytest
 from Extinction import reddening
@@ -32,15 +32,15 @@ def get_reddening(float_coordinates):
 class TestReddening:
     def test_init_float(self, float_coordinates):
         ra, dec = float_coordinates
-        red = reddening.Reddening(ra, dec)
+        reddening.Reddening(ra, dec)
 
     def test_init_list(self, list_coordinates):
         ra, dec = list_coordinates
-        red = reddening.Reddening(ra, dec)
+        reddening.Reddening(ra, dec)
 
     def test_init_mixt(self, mixt_coordinates):
         ra, dec = mixt_coordinates
-        red = reddening.Reddening(ra, dec)
+        reddening.Reddening(ra, dec)
 
     def test_astroquery(self, get_reddening):
         get_reddening.from_astroquery(dustmap='SFD98')
