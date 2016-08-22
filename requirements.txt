@@ -10,3 +10,4 @@ pytest
 astroquery
 sncosmo
 wget
+healpy
