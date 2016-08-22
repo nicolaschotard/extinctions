@@ -54,3 +54,11 @@ class TestReddening:
 
     def test_sncosmo(self, get_reddening):
         get_reddening.from_sncosmo()
+
+    def test_sfd_map(self, get_reddening):
+        get_reddening.query_local_map(dustmap='sfd')
+
+    def test_sncosmo(self, get_reddening):
+        get_reddening.query_local_map(dustmap='schlafly')
+
+    
