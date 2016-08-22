@@ -33,10 +33,13 @@ def get_reddening(float_coordinates):
     return reddening.Reddening(ra, dec)
 
 
-class TestReddening:
+class TestReddening(object):
 
     """Test the Reddening class."""
-    
+
+    def __init__(self):
+        print "Testing reddening.Reddening"
+        
     def test_init_float(self, float_coordinates):
         """Initialize with two floats."""
         ra, dec = float_coordinates

@@ -3,7 +3,6 @@ language: python
 cache:
   - pip
   - directories:
-    #- $HOME/miniconda/
     - $HOME/.extinction/maps/
 
 python:
@@ -14,7 +13,6 @@ install:
   # We do this conditionally because it saves us some downloading if the
   # version is the same.
   - wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh
-  #- if [ ! -d "$HOME/miniconda" ]; then bash miniconda.sh -b -p $HOME/miniconda; fi
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
   - hash -r
@@ -30,7 +28,7 @@ install:
   
 # command to run tests
 script:
-  - get_maps.py --exclude planck,green
+  - get_maps.py --update --exclude planck,green
   - coverage run --source="./" setup.py test
   - coverage run -a --source="./" extinction/*py
   - coverage run -a --source="./" extinction/extern/*py
