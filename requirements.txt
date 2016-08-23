@@ -1,3 +1,4 @@
+healpy
 numpy
 pylab
 scipy
@@ -6,8 +7,7 @@ seaborn
 pyyaml
 astropy
 requests
-pytest
 astroquery
 sncosmo
 wget
-healpy
+
