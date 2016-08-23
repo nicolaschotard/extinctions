@@ -9,24 +9,16 @@ Welcome to Extinction's documentation!
 .. warning:: Package under development
 
 .. toctree::
-   :maxdepth: 2
-   :caption: General
-
+   :maxdepth: 2   
+   
    readme
 
 .. toctree::
    :maxdepth: 2
-   :caption: Figures
 
    figures
    
 .. toctree::
-   :maxdepth: 3
-   :caption: Code description
+   :maxdepth: 2
 
    modules
-	     
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
