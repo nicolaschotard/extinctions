@@ -1,0 +1,13 @@
+numpy
+pylab
+scipy
+matplotlib
+seaborn
+pyyaml
+astropy
+requests
+astroquery
+sncosmo
+wget
+mock
+
