@@ -1,6 +1,5 @@
 healpy
 numpy
-pylab
 scipy
 matplotlib
 seaborn
