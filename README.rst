@@ -71,7 +71,8 @@ In the future, release versions will be listed at this `location
 Dependencies
 ------------
 
-`Extinction` has a few python dependencies:
+`Extinction` has a few python dependencies listed in the `requirements
+<requirements.txt>`_ file.
 
 - numpy
 - matplotlib
