@@ -127,7 +127,7 @@ Here is an example of how to get the value of E(B-V) for a set of
 coordinates (RA,DEC)::
 
   In [1]: ra, dec = 340.83, -9.59
-  In [2]: from extinction import reddening
+  In [2]: from Extinction import reddening
   In [3]: red = reddening.Reddening(ra, dec) # ra dec can also be lists of coordinates
   INFO: Loading the maps from local directory /home/chotard/.extinction/maps/
   - green is loaded
@@ -144,11 +144,11 @@ You can then get the E(B-V) from different sources::
   Out[5]: 0.062566755984547445
 
   # from the SFD98 north/south maps using `sncosmo`
-  In [6]: r.from_sncosmo()
+  In [6]: red.from_sncosmo()
   Out[6]: array([ 0.0473752])
 
   # Using astroquery
-  In [7]: r.from_astroquery()
+  In [7]: red.from_astroquery()
   Downloading http://irsa.ipac.caltech.edu//workspace/TMP_XG1Joz_30445/DUST/340.8300_-9.5900.v0001/extinction.tbl
   |==============================================================================================| 4.3k/4.3k (100.00%)         0s
   Out[7]: [0.047377326565143825]
