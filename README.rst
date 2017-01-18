@@ -2,16 +2,16 @@
    :target: http://extinctions.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
       
-.. image:: https://landscape.io/github/nicolaschotard/Extinction/master/landscape.svg?style=flat
-   :target: https://landscape.io/github/nicolaschotard/Extinction/master
+.. image:: https://landscape.io/github/nicolaschotard/extinctions/master/landscape.svg?style=flat
+   :target: https://landscape.io/github/nicolaschotard/extinctions/master
    :alt: Code Health
 
-.. image:: https://travis-ci.org/nicolaschotard/Extinction.svg?branch=master
-   :target: https://travis-ci.org/nicolaschotard/Extinction
+.. image:: https://travis-ci.org/nicolaschotard/extinctions.svg?branch=master
+   :target: https://travis-ci.org/nicolaschotard/extinctions
    :alt: Travis CI build status (Linux)
 
-.. image:: https://codecov.io/gh/nicolaschotard/Extinction/branch/master/graph/badge.svg
-  :target: https://codecov.io/gh/nicolaschotard/Extinction	 
+.. image:: https://codecov.io/gh/nicolaschotard/extinctions/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/nicolaschotard/extinctions	 
 
 .. inclusion-marker-do-not-remove
 	 
