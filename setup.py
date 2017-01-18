@@ -6,14 +6,14 @@ import os
 import glob
 from setuptools import setup, find_packages
 
-
+# Long description loaded from the README
 README = '/'.join(os.path.realpath(__file__).split('/')[:-1]) + '/README.rst'
 
 # Get requirements
-REQUIREMENTS = open("./requirements.txt").read().splitlines()
+REQUIREMENTS = '/'.join(os.path.realpath(__file__).split('/')[:-1]) + '/requirements.txt'
 
 # Get __version__ from version.py without importing package itself.
-VERSION = open('extinctions/version.py').read().split('"')[1]
+VERSION = '/'.join(os.path.realpath(__file__).split('/')[:-1]) + '/extinctions/version.py'
 
 # Package name
 NAME = 'extinctions'
@@ -34,7 +34,7 @@ CLASSIFIERS = ['Development Status :: 3 - Alpha',
                'Topic :: Scientific/Engineering :: Astronomy']
 
 setup(name=NAME,
-      version=VERSION,
+      version=open(VERSION).read().split('"')[1],
       description=("Extinction laws, maps and corrections"),
       license="MIT",
       classifiers=CLASSIFIERS,
@@ -47,5 +47,5 @@ setup(name=NAME,
       long_description=open(README).read(),
       setup_requires=['pytest-runner'],
       tests_require=['pytest'],
-      install_requires=REQUIREMENTS
+      install_requires=open(REQUIREMENTS).read().splitlines()
      )
