@@ -117,19 +117,23 @@ To have a look at the different extinction laws amd dust maps, you can
 use the script `extinction_plots.py`.
 
 Here is an example of how to get the value of E(B-V) for a set of
-coordinates (RA,DEC)::
+coordinates (RA,DEC):
 
->>> ra, dec = 340.83, -9.59
->>> from extinctions import reddening
->>> red = reddening.Reddening(ra, dec) # ra dec can also be lists of coordinates
->>>  INFO: Loading the maps from local directory /home/chotard/.extinction/maps/
->>>  - green is loaded
->>>  - schlafly is loaded
->>>  - sfd is loaded
->>>  - WARNING: You must download the map HFI_CompMap_ThermalDustModel_2048_R1.20.fits (planck) in order to use it. Use get_maps to do so.
+.. code:: python
+	  
+  In [1]: ra, dec = 340.83, -9.59
+  In [2]: from extinctions import reddening
+  In [3]: red = reddening.Reddening(ra, dec) # ra dec can also be lists of coordinates
+  INFO: Loading the maps from local directory /home/chotard/.extinction/maps/
+  - green is loaded
+  - schlafly is loaded
+  - sfd is loaded
+  - WARNING: You must download the map HFI_CompMap_ThermalDustModel_2048_R1.20.fits (planck) in order to use it. Use get_maps to do so.
 
-You can then get E(B-V) from different sources::
+You can then get E(B-V) from different sources:
 
+.. code:: python
+	  
   # from the local maps
   In [4]: red.query_local_map(dustmap='sfd')
   Out[4]: 0.047723956233310674
