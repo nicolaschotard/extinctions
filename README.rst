@@ -13,16 +13,10 @@
 .. image:: https://codecov.io/gh/nicolaschotard/Extinction/branch/master/graph/badge.svg
   :target: https://codecov.io/gh/nicolaschotard/Extinction	 
 
-____
-
-**WARNING**: Package under development
-
-____
-
 .. inclusion-marker-do-not-remove
 	 
-Extinction
-----------
+extinctions
+-----------
 
 Python package including different extinction laws and dust maps. Useful to
 
@@ -43,56 +37,52 @@ Installation
 
 To install::
 
-  git clone https://github.com/nicolaschotard/Extinction.git
-  pip install Extinction/
+  git clone https://github.com/nicolaschotard/extinctions.git
+  pip install extinctions/
 
 To install in a local directory ``mypath``, use::
 
-  pip install --prefix='mypath' Extinction/
+  pip install --prefix='mypath' extinctions/
 
 and do not forget to add it to your PYTHONPATH.
 
 To upgrade to a new version (after a ``git pull`` or a local modification), use::
 
-  pip install --upgrade (--prefix='mypath') Extinction/
+  pip install --upgrade (--prefix='mypath') extinctions/
 
 To install a release version (no release version available yet)::
 
-  pip install http://github.com/nicolaschotard/Extinction/archive/v0.1.tar.gz
+  pip install http://github.com/nicolaschotard/extinctions/archive/v0.1.tar.gz
 
 Also works with the master::
 
-  pip install (--upgrade) https://github.com/nicolaschotard/Extinction/archive/master.zip
+  pip install (--upgrade) https://github.com/nicolaschotard/extinctions/archive/master.zip
 
 In the future, release versions will be listed at this `location
-<http://github.com/nicolaschotard/Extinction/releases>`_.
+<http://github.com/nicolaschotard/extinctions/releases>`_.
 
 
 Dependencies
 ------------
 
-`Extinction` has a few python dependencies listed in the `requirements
-<requirements.txt>`_ file.
+`extinctions` has a few python dependencies listed in the `requirements
+<requirements.txt>`_ file. To install them all, use::
 
-- numpy
-- matplotlib
-- seaborn
-- astropy / astroquery  
-- healpy
+  pip install -r requirements.txt
 
   
 Dust map setup
 --------------
 
-The first thing needed to use this package is to download the dust
-maps stored in the `maps.yaml <extinction/data/maps.yaml>`_ file. The
-script `get_maps.py` automatically downloads these maps in (by
-default) $HOME/.extinction/maps. Other locations are of course
-possible with the option `--outdir`, as long at this output directory
-is correctly added to the PATH environment variable. Already existing
-maps in the output directory will not be downloaded again.
+You can automatically download the dust maps listed in the `maps.yaml
+<extinction/data/maps.yaml>`_ file using the script `get_maps.py`. It
+will, by default, put them in $HOME/.extinction/maps, but other
+locations are of course possible (option `--outdir`). If you choose to
+store them in an other diretory, you must set a $MAPSDIR environment
+variable pointing to it. Already existing maps in the output directory
+will not be downloaded again.
 
-Available dust maps are for now:
+The available dust maps are:
 
 - `SFD98 <http://lambda.gsfc.nasa.gov/product/foreground/dust_map.cfm>`_, full sky Healpy format
 - SFD98 `north <http://www.sdss3.org/svn/repo/catalogs/dust/trunk/maps/SFD_dust_4096_ngp.fits>`_ and `south <http://www.sdss3.org/svn/repo/catalogs/dust/trunk/maps/SFD_dust_4096_sgp.fits>`_ dust maps
@@ -101,8 +91,8 @@ Available dust maps are for now:
 - `Green 2015 <http://lambda.gsfc.nasa.gov/product/foreground/fg_ebv_2015_map_info.cfm>`_
 
 
-Usage
------
+Download the maps
+-----------------
 
 To get the extinction maps listed above, use the script `get_maps.py`
 with the follwoing options ::
@@ -120,6 +110,9 @@ with the follwoing options ::
      --exclude EXCLUDE  Exclude map(s) (coma separated).If the select option is
                         used, the exclude option will be ignored.
 
+
+Usage
+-----
 To have a look at the different extinction laws amd dust maps, you can
 use the script `extinction_plots.py`.
 
@@ -127,7 +120,7 @@ Here is an example of how to get the value of E(B-V) for a set of
 coordinates (RA,DEC)::
 
   In [1]: ra, dec = 340.83, -9.59
-  In [2]: from Extinction import reddening
+  In [2]: from extinctions import reddening
   In [3]: red = reddening.Reddening(ra, dec) # ra dec can also be lists of coordinates
   INFO: Loading the maps from local directory /home/chotard/.extinction/maps/
   - green is loaded

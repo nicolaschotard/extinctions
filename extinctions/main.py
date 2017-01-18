@@ -3,13 +3,14 @@
 
 import os
 import sys
-import yaml
+import shutil
 import wget
 from argparse import ArgumentParser
 from pkg_resources import resource_filename
-from shutil import copy2
+import yaml
 
-from Extinction import extinction
+from extinctions import extinction
+
 
 # Download the dust maps
 
@@ -71,7 +72,7 @@ def get_maps(argv=None):
     # Get the maps yaml file
     m = resource_filename('Extinction', 'data/maps.yaml')
     print "INFO: getting the map list from the local github repository: %s" % m
-    copy2(m, outdir)
+    shutil.copy2(m, outdir)
 
     # Now get all or part of the maps
     maps = yaml.load(open(outdir + "/maps.yaml"))

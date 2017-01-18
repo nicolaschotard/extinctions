@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
-"""Initialize the extinction package."""
+"""Initialize the extinctions package."""
 
 import os
 import glob
 
 # Automatically import all modules (python files)
-__all__ = [os.path.basename(m).replace('.py', '') for m in glob.glob("extinction/*.py")
+__all__ = [os.path.basename(m).replace('.py', '') for m in glob.glob("extinctions/*.py")
            if '__init__' not in m] + ['extern']
 
 # Set to True if you want to import all previous modules directly

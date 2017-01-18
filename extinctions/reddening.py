@@ -1,15 +1,14 @@
 """Get the reddening E(B-V) for a given set of coordinates."""
 
 import os
-import yaml
-import healpy
 import numpy as np
-
 from astropy.io import fits
-from astropy.units import degree
+from astropy import units
 from astropy.coordinates import SkyCoord
+import healpy
+import yaml
 
-from Extinction.extern import snfactory, argonaut, others
+from extinctions.extern import snfactory, argonaut, others
 
 
 class Reddening(object):
@@ -21,15 +20,15 @@ class Reddening(object):
         self.ra = ra if isinstance(ra, list) else [ra]
         self.dec = dec if isinstance(dec, list) else [dec]
         assert len(self.ra) == len(self.dec)
-        self.coordinates = SkyCoord(ra=ra, dec=dec, unit=degree)
+        self.coordinates = SkyCoord(ra=ra, dec=dec, unit=units.degree)
 
         # Convert to galactic coordinates.
         self.theta = (90. - self.coordinates.galactic.b.degree) * np.pi / 180.
         self.phi = self.coordinates.galactic.l.degree * np.pi / 180.
 
         # Map directory
-        if map_dir is None:
-            map_dir = os.getenv('HOME') + '/.extinction/maps/'
+        map_dir = os.environ.get("MAPSDIR") if map_dir is None else map_dir
+        map_dir = os.getenv('HOME') + '/.extinction/maps/' if map_dir is None else map_dir
         self.map_dir = map_dir
 
         # Load the maps
@@ -147,8 +146,7 @@ def plot_map(smap=0):
 def test_ebm(ra, dec, smap=0, nest=False):
     """Make some tests."""
     # Parse input
-    coordinates = SkyCoord(ra=ra, dec=dec,
-                           unit=degree)
+    coordinates = SkyCoord(ra=ra, dec=dec, unit=units.degree)
 
     # Convert to galactic coordinates.
     l = coordinates.galactic.l.degree

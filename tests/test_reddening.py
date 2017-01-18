@@ -1,6 +1,6 @@
 """Test the reddening module."""
 
-from Extinction import reddening
+from extinctions import reddening
 
 
 # Test values
