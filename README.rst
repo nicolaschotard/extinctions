@@ -1,7 +1,7 @@
 .. image:: http://readthedocs.org/projects/extinctions/badge/?version=latest
    :target: http://extinctions.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
-
+      
 .. image:: https://landscape.io/github/nicolaschotard/Extinction/master/landscape.svg?style=flat
    :target: https://landscape.io/github/nicolaschotard/Extinction/master
    :alt: Code Health
@@ -94,8 +94,8 @@ The available dust maps are:
 Download the maps
 -----------------
 
-To get the extinction maps listed above, use the script `get_maps.py`
-with the follwoing options ::
+To download the extinction maps listed above, use the script
+`get_maps.py`. The following options are available::
 
   get_maps.py -h
   usage: get_maps.py [-h] [--outdir OUTDIR] [--update] [--list]
@@ -119,16 +119,16 @@ use the script `extinction_plots.py`.
 Here is an example of how to get the value of E(B-V) for a set of
 coordinates (RA,DEC)::
 
-  In [1]: ra, dec = 340.83, -9.59
-  In [2]: from extinctions import reddening
-  In [3]: red = reddening.Reddening(ra, dec) # ra dec can also be lists of coordinates
-  INFO: Loading the maps from local directory /home/chotard/.extinction/maps/
-  - green is loaded
-  - schlafly is loaded
-  - sfd is loaded
-  - WARNING: You must download the map HFI_CompMap_ThermalDustModel_2048_R1.20.fits (planck) in order to use it. Use get_maps to do so.
+>>> ra, dec = 340.83, -9.59
+>>> from extinctions import reddening
+>>> red = reddening.Reddening(ra, dec) # ra dec can also be lists of coordinates
+>>>  INFO: Loading the maps from local directory /home/chotard/.extinction/maps/
+>>>  - green is loaded
+>>>  - schlafly is loaded
+>>>  - sfd is loaded
+>>>  - WARNING: You must download the map HFI_CompMap_ThermalDustModel_2048_R1.20.fits (planck) in order to use it. Use get_maps to do so.
 
-You can then get the E(B-V) from different sources::
+You can then get E(B-V) from different sources::
 
   # from the local maps
   In [4]: red.query_local_map(dustmap='sfd')

@@ -8,7 +8,10 @@ from astropy.coordinates import SkyCoord
 import healpy
 import yaml
 
-from extinctions.extern import snfactory, argonaut, others
+from extinctions.extern import snfactory
+from extinctions.extern import argonaut
+from extinctions.extern import sncosmo
+from extinctions.extern import others
 
 
 class Reddening(object):
@@ -75,7 +78,7 @@ class Reddening(object):
 
     def from_sncosmo(self):
         """Using sncosmo query utilisies on local SFD98 north/south maps."""
-        return others.sncosmo.get_ebv_from_map([self.ra, self.dec], mapdir=self.map_dir)
+        return sncosmo.get_ebv_from_map([self.ra, self.dec], mapdir=self.map_dir)
 
     def from_argonaut(self):
         """Using the distant argonaut query utility."""
@@ -174,7 +177,7 @@ def test_ebm(ra, dec, smap=0, nest=False):
     f = snfactory.sfd_ebmv(ra, dec)
 
     # from sncosmo
-    sn = others.sncosmo.get_ebv_from_map([ra, dec], mapdir='/home/chotard/.extinction/maps/')
+    sn = sncosmo.get_ebv_from_map([ra, dec], mapdir='/home/chotard/.extinction/maps/')
 
     # from other query
     ebv_sfd = argonaut.query(ra, dec, coordsys='equ', mode='sfd')['EBV_SFD'][0]

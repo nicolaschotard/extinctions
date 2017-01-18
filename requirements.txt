@@ -7,6 +7,5 @@ pyyaml
 astropy
 requests
 astroquery
-sncosmo
 wget
 
