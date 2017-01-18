@@ -70,7 +70,7 @@ def get_maps(argv=None):
         print "INFO: output directory used is", outdir
 
     # Get the maps yaml file
-    m = resource_filename('Extinction', 'data/maps.yaml')
+    m = resource_filename('extinctions', 'data/maps.yaml')
     print "INFO: getting the map list from the local github repository: %s" % m
     shutil.copy2(m, outdir)
 
