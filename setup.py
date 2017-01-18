@@ -9,6 +9,9 @@ from setuptools import setup, find_packages
 
 README = '/'.join(os.path.realpath(__file__).split('/')[:-1]) + '/README.rst'
 
+# Get requirements
+REQUIREMENTS = open("./requirements.txt").read().splitlines()
+
 # Get __version__ from version.py without importing package itself.
 VERSION = open('extinctions/version.py').read().split('"')[1]
 
@@ -44,5 +47,5 @@ setup(name=NAME,
       long_description=open(README).read(),
       setup_requires=['pytest-runner'],
       tests_require=['pytest'],
-      install_requires=open("requirements.txt").read().splitlines()
+      install_requires=REQUIREMENTS
      )
