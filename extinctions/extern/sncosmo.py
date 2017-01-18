@@ -5,7 +5,7 @@ import os
 import numpy as np
 from scipy.ndimage import map_coordinates
 from astropy.coordinates import SkyCoord
-import astropy.units as u
+from astropy import units
 from astropy.io import fits
 from astropy.utils import isiterable
 
@@ -82,7 +82,7 @@ class SFD98Map(object):
         # Parse input
         if not isinstance(coordinates, SkyCoord):
             ra, dec = coordinates
-            coordinates = SkyCoord(ra=ra, dec=dec, frame='icrs', unit=u.degree)
+            coordinates = SkyCoord(ra=ra, dec=dec, frame='icrs', unit=units.degree)
 
         # Convert to galactic coordinates.
         coordinates = coordinates.galactic
@@ -117,12 +117,11 @@ class SFD98Map(object):
 
             d = self.__dict__[ext]
 
-            # Project from galactic longitude/latitude to lambert pixels.
-            # (See SFD98).
-            x = d['CRPIX1']-1. + (d['LAM_SCAL'] * np.cos(l[mask]) *
-                                  np.sqrt(1. - sign*np.sin(b[mask])))
-            y = d['CRPIX2']-1. - sign*(d['LAM_SCAL'] * np.sin(l[mask]) *
-                                       np.sqrt(1. - sign*np.sin(b[mask])))
+            # Project from galactic longitude/latitude to lambert pixels. (See SFD98).
+            x = d['CRPIX1'] - 1. + (d['LAM_SCAL'] * np.cos(l[mask]) *
+                                    np.sqrt(1. - sign * np.sin(b[mask])))
+            y = d['CRPIX2'] - 1. - sign * (d['LAM_SCAL'] * np.sin(l[mask]) *
+                                           np.sqrt(1. - sign * np.sin(b[mask])))
 
             # Get map values at these pixel coordinates.
             if interpolate:

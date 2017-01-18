@@ -80,7 +80,7 @@ def get_maps(argv=None):
     # List the maps
     if args.list:
         list_maps(maps)
-        sys.exit()
+        return
 
     # Selection by the user?
     if args.select is not None:
@@ -112,9 +112,17 @@ def get_maps(argv=None):
 # Make plots
 
 
-def extinction_plots():
+def extinction_plots(argv=None):
     """Plot the available extinction laws."""
+    description = """Plot extinction curves."""
+    prog = "extinction_plots.py"
+
     print "\nUse extinction.py to plot the extinction laws.\n"
+
+    parser = ArgumentParser(prog=prog, description=description)
+    parser.add_argument("--hide", action='store_true', default=False,
+                        help="Do NOT show the figures")
+    args = parser.parse_args(argv)
 
     eplot = extinction.ExtinctionsPlots()
 
@@ -128,5 +136,5 @@ def extinction_plots():
     eplot.plot_albd_variability()
 
     # See also eplot.plot_all_figures()
-
-    extinction.pylab.show()
+    if not args.hide:
+        extinction.pylab.show()

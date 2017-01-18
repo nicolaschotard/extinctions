@@ -298,7 +298,7 @@ def fm99_extinction(lbda, rv=3.1, lmc2=False, avglmc=False, params=None,
 
 
 def fm_unreddened(lbda, flux, ebmv, rv=3.1, lmc2=False,
-                 avglmc=False, k=5, s=None):
+                  avglmc=False, k=5, s=None):
     """
     Deredden a flux vector using the Fitzpatrick (1999) parameterization.
 
