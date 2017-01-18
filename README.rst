@@ -113,15 +113,16 @@ To download the extinction maps listed above, use the script
 
 Usage
 -----
-To have a look at the different extinction laws amd dust maps, you can
-use the script `extinction_plots.py`.
+
+Get E(B-V)
+``````````
 
 Here is an example of how to get the value of E(B-V) for a set of
 coordinates (RA,DEC):
 
 .. code:: python
 	  
-  In [1]: ra, dec = 340.83, -9.59
+  In [1]: ra, dec = 340.83, -9.59 # could also be arrays or list of ra/dec
   In [2]: from extinctions import reddening
   In [3]: red = reddening.Reddening(ra, dec) # ra dec can also be lists of coordinates
   INFO: Loading the maps from local directory /home/chotard/.extinction/maps/
@@ -141,7 +142,6 @@ You can then get E(B-V) from different sources:
   Out[5]: 0.062566755984547445
   In [6]: red.query_local_map(dustmap='planck')
   Out[6]: 0.052058338535565914
-
   In [7]: red.query_local_map(dustmap='green')
   Out[7]: 0.035786284169101318
 
@@ -155,3 +155,10 @@ You can then get E(B-V) from different sources:
   Downloading http://irsa.ipac.caltech.edu//workspace/TMP_XG1Joz_30445/DUST/340.8300_-9.5900.v0001/extinction.tbl
   |==============================================================================================| 4.3k/4.3k (100.00%)         0s
   Out[9]: [0.047377326565143825]
+
+
+Make some plots
+```````````````
+
+To have a look at the different extinction laws amd dust maps, you can
+use the script `extinction_plots.py`.
