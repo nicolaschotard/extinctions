@@ -4,15 +4,14 @@
 
 import os
 import glob
-import yaml
 from setuptools import setup, find_packages
 
 
 README = '/'.join(os.path.realpath(__file__).split('/')[:-1]) + '/README.rst'
-VERSION = '/'.join(os.path.realpath(__file__).split('/')[:-1]) + '/version.yaml'
 
-# Get version from version.py without importing package itself.
-VERSION = yaml.load(open(VERSION))['version']
+# Get __version__ from version.py without importing package itself.
+with open('extinctions/version.py') as f:
+    exec(f.read())
 
 # Package name
 NAME = 'extinctions'
@@ -33,7 +32,7 @@ CLASSIFIERS = ['Development Status :: 3 - Alpha',
                'Topic :: Scientific/Engineering :: Astronomy']
 
 setup(name=NAME,
-      version=VERSION,
+      version=__version__,
       description=("Extinction laws, maps and corrections"),
       license="MIT",
       classifiers=CLASSIFIERS,
