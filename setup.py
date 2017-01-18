@@ -25,12 +25,18 @@ SCRIPTS = glob.glob("scripts/*.py")
 
 PACKAGE_DATA = {NAME: ["data/maps.yaml"]}
 
+CLASSIFIERS = ['Development Status :: 3 - Alpha',
+               'Intended Audience :: Science/Research',
+               'Topic :: Software Development :: Build Tools',
+               'License :: OSI Approved :: MIT License',
+               'Programming Language :: Python :: 2',
+               'Topic :: Scientific/Engineering :: Astronomy']
+
 setup(name=NAME,
       version=VERSION,
       description=("Extinction laws, maps and corrections"),
       license="MIT",
-      classifiers=["Topic :: Scientific :: Astronomy",
-                   "Intended Audience :: Science/Research"],
+      classifiers=CLASSIFIERS,
       url="https://github.com/nicolaschotard/extinctions",
       author="Nicolas Chotard",
       author_email="nchotard@in2p3.fr",
