@@ -72,7 +72,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Extinction'
+project = u'extinctions'
 # Hack to avoid the "Redefining built-in 'copyright'" error from static
 # analysis tools
 globals()['copyright'] = u'2016, N. Chotard'
@@ -160,7 +160,7 @@ html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 # The name for this set of Sphinx documents.
 # "<project> v<release> documentation" by default.
 #
-html_title = u'Extinction v' + version
+html_title = u'extinctions v' + version
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #
@@ -260,7 +260,7 @@ html_last_updated_fmt = '%b %d, %Y'
 # html_search_scorer = 'scorer.js'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'Extinctiondoc'
+htmlhelp_basename = 'extinctionsdoc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -286,7 +286,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'Extinction.tex', u'Extinction Documentation',
+    (master_doc, 'extinctions.tex', u'extinctions Documentation',
      u'N. Chotard', 'manual'),
 ]
 
@@ -322,7 +322,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'extinction', u'Extinction Documentation',
+    (master_doc, 'extinctions', u'extinctions Documentation',
      [author], 1)
 ]
 
@@ -337,8 +337,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'Extinction', u'Extinction Documentation',
-     author, 'Extinction', 'Extinction laws and dust maps package',
+    (master_doc, 'extinctions', u'extinctions Documentation',
+     author, 'extinctions', 'Extinction laws and dust maps package',
      'Miscellaneous'),
 ]
 

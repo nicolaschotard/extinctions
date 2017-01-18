@@ -29,7 +29,7 @@ install:
 # command to run tests
 script:
   - get_maps.py --update --exclude planck,green
-  - coverage run --source="Extinction" setup.py test
+  - coverage run --source="extinctions" setup.py test
 
 after_success:
   - codecov

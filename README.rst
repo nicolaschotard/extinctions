@@ -128,7 +128,7 @@ coordinates (RA,DEC):
   - green is loaded
   - schlafly is loaded
   - sfd is loaded
-  - WARNING: You must download the map HFI_CompMap_ThermalDustModel_2048_R1.20.fits (planck) in order to use it. Use get_maps to do so.
+  - planck is loaded
 
 You can then get E(B-V) from different sources:
 
@@ -139,13 +139,19 @@ You can then get E(B-V) from different sources:
   Out[4]: 0.047723956233310674
   In [5]: red.query_local_map(dustmap='schlafly')
   Out[5]: 0.062566755984547445
+  In [6]: red.query_local_map(dustmap='planck')
+  Out[6]: 0.052058338535565914
+
+  In [7]: red.query_local_map(dustmap='green')
+  Out[7]: 0.035786284169101318
+
 
   # from the SFD98 north/south maps using `sncosmo`
-  In [6]: red.from_sncosmo()
-  Out[6]: array([ 0.0473752])
+  In [8]: red.from_sncosmo()
+  Out[8]: array([ 0.0473752])
 
   # Using astroquery
-  In [7]: red.from_astroquery()
+  In [9]: red.from_astroquery()
   Downloading http://irsa.ipac.caltech.edu//workspace/TMP_XG1Joz_30445/DUST/340.8300_-9.5900.v0001/extinction.tbl
   |==============================================================================================| 4.3k/4.3k (100.00%)         0s
-  Out[7]: [0.047377326565143825]
+  Out[9]: [0.047377326565143825]
