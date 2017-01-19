@@ -10,8 +10,6 @@ References:
 * G08: Goobar (`<http://adsabs.harvard.edu/abs/2008ApJ...686L.103G>`_)
 """
 
-import matplotlib
-matplotlib.use('Agg')
 import numpy as N
 from scipy import interpolate
 import pylab

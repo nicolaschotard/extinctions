@@ -46,5 +46,6 @@ setup(name=NAME,
       package_data=PACKAGE_DATA,
       long_description=open(README).read(),
       setup_requires=['pytest-runner'],
-      tests_require=['pytest']
+      tests_require=['pytest'],
+      install_requires=open(REQUIREMENTS).read().splitlines()
      )
