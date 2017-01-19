@@ -70,6 +70,20 @@ Dependencies
 
   pip install -r requirements.txt
 
+Requirements are:
+
+- numpy==1.11.2
+- scipy==0.17.1
+- matplotlib==1.5.1
+- seaborn==0.7.0
+- pyyaml==3.11
+- astropy==1.2.1
+- requests==2.10.0
+- astroquery==0.3.1
+- wget==2.2
+- healpy==1.9.1
+
+
   
 Dust map setup
 --------------

@@ -7,6 +7,7 @@ from astropy import units
 from astropy.coordinates import SkyCoord
 import healpy
 import yaml
+from pkg_resources import resource_filename
 
 from extinctions.extern import snfactory
 from extinctions.extern import argonaut
@@ -39,10 +40,12 @@ class Reddening(object):
 
     def _load_maps(self):
         """Load the local maps."""
-        if not os.path.exists(self.map_dir + '/maps.yaml'):
-            print "ERROR: No maps.yaml file found in", self.map_dir, ". ABORT."
-        print "INFO: Loading the maps from local directory", self.map_dir
-        self.maps = yaml.load(open(self.map_dir + '/maps.yaml'))
+        pmap = self.map_dir + '/maps.yaml' if os.path.exists(self.map_dir + '/maps.yaml') else None
+        pmap = resource_filename('extinctions', 'data/maps.yaml') if pmap is None else pmap
+        if pmap is None:
+            raise IOError("No maps.yaml found anywehre")
+        print "INFO: Loading the maps from", pmap
+        self.maps = yaml.load(open(pmap))
         for m in self.maps:
             lmap = self.map_dir + '/' + os.path.basename(self.maps[m]['url'])
             if not os.path.exists(lmap):

@@ -2,7 +2,6 @@
 
 
 import os
-import sys
 import shutil
 import wget
 from argparse import ArgumentParser
