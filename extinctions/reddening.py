@@ -24,7 +24,9 @@ class Reddening(object):
         self.ra = ra if isinstance(ra, list) else [ra]
         self.dec = dec if isinstance(dec, list) else [dec]
         assert len(self.ra) == len(self.dec)
-        self.coordinates = SkyCoord(ra=ra, dec=dec, unit=units.degree)
+        self.coordinates = SkyCoord(ra=units.Quantity(ra, 'deg'),
+                                    dec=units.Quantity(dec, 'deg'),
+                                    unit=units.degree)
 
         # Convert to galactic coordinates.
         self.theta = (90. - self.coordinates.galactic.b.degree) * np.pi / 180.
