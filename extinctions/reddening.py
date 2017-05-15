@@ -1,6 +1,7 @@
 """Get the reddening E(B-V) for a given set of coordinates."""
 
 import os
+import gc
 import numpy as np
 from astropy.io import fits
 from astropy import units
@@ -68,6 +69,7 @@ class Reddening(object):
             self.loaded_maps[cmap] = self.maps[cmap]
             self.loaded_maps[cmap]['map'] = fits.getdata(lmap)['ebv']
             print ' - ', cmap, "is loaded"
+        gc.collect()
 
     def from_astroquery(self, dustmap='SFD98'):
         """Query IRAS using the astropy/astroquery tools (SFD98 or SF11 maps)."""
