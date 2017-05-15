@@ -1,7 +1,6 @@
 """Get the reddening E(B-V) for a given set of coordinates."""
 
 import os
-import gc
 import numpy as np
 from astropy.io import fits
 from astropy import units
@@ -63,13 +62,13 @@ class Reddening(object):
         elif cmap in ['sfd', 'planck']:
             field = 2 if cmap == 'planck' else 0
             self.loaded_maps[cmap] = self.maps[cmap]
-            self.loaded_maps[cmap]['map'] = healpy.read_map(lmap, verbose=False, field=field)
+            self.loaded_maps[cmap]['map'] = healpy.read_map(lmap, verbose=False,
+                                                            field=field, memmap=True)
             print ' - ', cmap, "is loaded"
         elif cmap in ['schlafly', 'green']:
             self.loaded_maps[cmap] = self.maps[cmap]
             self.loaded_maps[cmap]['map'] = fits.getdata(lmap)['ebv']
             print ' - ', cmap, "is loaded"
-        gc.collect()
 
     def from_astroquery(self, dustmap='SFD98'):
         """Query IRAS using the astropy/astroquery tools (SFD98 or SF11 maps)."""
