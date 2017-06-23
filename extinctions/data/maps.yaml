@@ -1,9 +1,12 @@
+# Temporary problem (hopefully) with the following files
+#"url": "http://www.sdss3.org/svn/repo/catalogs/dust/trunk/maps/SFD_dust_4096_ngp.fits",
+#"url": "http://www.sdss3.org/svn/repo/catalogs/dust/trunk/maps/SFD_dust_4096_sgp.fits",
 {
     "sfd": {"url": "http://lambda.gsfc.nasa.gov/data/foregrounds/SFD/lambda_sfd_ebv.fits",
             "size": "25M"},
-    "sfd_npg": {"url": "http://www.sdss3.org/svn/repo/catalogs/dust/trunk/maps/SFD_dust_4096_ngp.fits",
+    "sfd_npg": {"url": "https://github.com/kbarbary/sfddata/blob/master/SFD_dust_4096_ngp.fits",
                 "size": "65M"},
-    "sfd_spg": {"url": "http://www.sdss3.org/svn/repo/catalogs/dust/trunk/maps/SFD_dust_4096_sgp.fits",
+    "sfd_spg": {"url": "https://github.com/kbarbary/sfddata/blob/master/SFD_dust_4096_sgp.fits",
                 "size": "65M"},
     "schlafly": {"url": "http://lambda.gsfc.nasa.gov/data/foregrounds/EBV/ps1-ebv-4.5kpc.fits",
                  "size": "85M"},
