@@ -4,7 +4,7 @@
 {
     "sfd": {"url": "http://lambda.gsfc.nasa.gov/data/foregrounds/SFD/lambda_sfd_ebv.fits",
             "size": "25M"},
-    "sfd_npg": {"https://lapp-owncloud.in2p3.fr/index.php/s/Jy2CcrtcrgCrB7d/download",
+    "sfd_npg": {"url": "https://lapp-owncloud.in2p3.fr/index.php/s/Jy2CcrtcrgCrB7d/download",
                 "size": "65M"},
     "sfd_spg": {"url": "https://lapp-owncloud.in2p3.fr/index.php/s/FBVPJBE2eGMV9fk/download",
                 "size": "65M"},
