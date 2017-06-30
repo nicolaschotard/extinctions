@@ -4,9 +4,9 @@
 {
     "sfd": {"url": "http://lambda.gsfc.nasa.gov/data/foregrounds/SFD/lambda_sfd_ebv.fits",
             "size": "25M"},
-    "sfd_npg": {"url": "https://github.com/kbarbary/sfddata/blob/master/SFD_dust_4096_ngp.fits",
+    "sfd_npg": {"url": "https://lsst-web.ncsa.illinois.edu/~nchotard/dustmaps/SFD_dust_4096_ngp.fits",
                 "size": "65M"},
-    "sfd_spg": {"url": "https://github.com/kbarbary/sfddata/blob/master/SFD_dust_4096_sgp.fits",
+    "sfd_spg": {"url": "https://lsst-web.ncsa.illinois.edu/~nchotard/dustmaps/SFD_dust_4096_sgp.fits",
                 "size": "65M"},
     "schlafly": {"url": "http://lambda.gsfc.nasa.gov/data/foregrounds/EBV/ps1-ebv-4.5kpc.fits",
                  "size": "85M"},
