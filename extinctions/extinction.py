@@ -10,9 +10,16 @@ References:
 * G08: Goobar (`<http://adsabs.harvard.edu/abs/2008ApJ...686L.103G>`_)
 """
 
+
+import os
+import matplotlib as mpl
+if os.environ.get('DISPLAY', '') == '':
+    print 'no display found. Using non-interactive Agg backend'
+    mpl.use('Agg')
+import pylab
 import numpy as N
 from scipy import interpolate
-import pylab
+
 
 # *Indicative* Bessel filter central wavelengths [A]
 BesselFilters = dict(U=3590.,
