@@ -11,10 +11,11 @@ References:
 """
 
 
+from __future__ import print_function
 import os
 import matplotlib as mpl
 if os.environ.get('DISPLAY', '') == '':
-    print 'no display found. Using non-interactive Agg backend'
+    print('no display found. Using non-interactive Agg backend')
     mpl.use('Agg')
 import pylab
 import numpy as N
@@ -239,21 +240,21 @@ def fm99_extinction(lbda, rv=3.1, lmc2=False, avglmc=False, params=None,
             raise KeyError(
                 "params dictionary must have the following keys: %s" % keys)
         else:
-            print "Use the given set of parameters:"
+            print("Use the given set of parameters:")
     elif lmc2:
         params = {'gamma': 1.05, 'x0': 4.626, 'c4': 0.42,
                   'c3': 1.92, 'c2': 1.31, 'c1': -2.16}
-        print "Use the lmc2 set of parameters:"
+        print("Use the lmc2 set of parameters:")
     elif avglmc:
         params = {'gamma': 0.91, 'x0': 4.596, 'c4': 0.64,
                   'c3': 2.73, 'c2': 1.11, 'c1': -1.28}
-        print "Use the avglmc set of parameters:"
+        print("Use the avglmc set of parameters:")
     else:
         c2 = -0.824 + 4.717 / rv
         params = {'gamma': 0.99, 'x0': 4.596, 'c4': 0.41,
                   'c3': 3.23, 'c2': c2, 'c1': 2.030 - 3.007 * c2}
-        print "Use the standard set of parameters for MW:"
-    print '; '.join(["%s=%.2f" % (p, params[p]) for p in params])
+        print("Use the standard set of parameters for MW:")
+    print('; '.join(["%s=%.2f" % (p, params[p]) for p in params]))
 
     # Make sure that the law is constructed over a fair range of wavelength
     rlbda = N.arange(2000, 10000, 1)
@@ -400,47 +401,47 @@ class ExtinctionsPlots(object):
         - The O'Donnel extinction law
         """
         fig = pylab.figure(dpi=100)
-        print ("Figure %i: Extinction laws" % (fig.number)).center(80, '=')
-        print """
+        print(("Figure %i: Extinction laws" % (fig.number)).center(80, '='))
+        print("""
         Avalaible extinction laws from extinction.py
-        """
+        """)
         gl = "Goobar law".center(30, '-')
 
         # Compute the goobar extinction law
         a, p = 0.9, -1.5  # Set the values for the MW dust
         goob_ext = goobar08_law(self.wavelength, self.ref_wavelengths['V'], a, p)
-        print """
+        print("""
         %s
         Set the values for the MW dust:
         a = %.2f ; p = %.2f
         Corresponding: Rv =%.2f
-        """ % (gl, a, p, ap_to_rv(a, p))
+        """ % (gl, a, p, ap_to_rv(a, p)))
 
         # Compute the CCM extinction law
         cl = "CCM law".center(30, '-')
-        print """
+        print("""
         %s
         CCM law for Rv = 3.1
         CCM law for Rv = %.1f
-        """ % (cl, ap_to_rv(a, p))
+        """ % (cl, ap_to_rv(a, p)))
         ccm_ext = extinction_law(self.wavelength, law='CCM89')
         ccm_goob = extinction_law(self.wavelength,
                                   rv=ap_to_rv(a, p), law='CCM89')
 
         # Compute the FM extinction law
         fl = "Fitzpatrick law".center(30, '-')
-        print """
+        print("""
         %s
         Fitzpatrick law for Rv = 3.1
-        """ % (fl)
+        """ % fl)
         fm_ext = fm99_extinction(self.wavelength)
 
         # Compute the O'Donnel extinction law
         ol = "O'Donnel 94 law".center(30, '-')
-        print """
+        print("""
         %s
         O'Donnel 94 law for Rv = 3.1\n
-        """ % ol
+        """ % ol)
         od_ext = extinction_law(self.wavelength, law='OD94')
 
         # Make a figure
@@ -471,14 +472,14 @@ class ExtinctionsPlots(object):
         Rv and E(B-V).
         """
         fig = pylab.figure(dpi=self.dpi)
-        print ("Figure %i: Cardelli extinction law" %
-               (fig.number)).center(80, '=')
-        print"""
+        print(("Figure %i: Cardelli extinction law" %
+               (fig.number)).center(80, '='))
+        print("""
         Top panel: Cardelli extinction law parammeters a and b (top pannel).
         Bottom panel:
         - CCM extinction law as A(lbd)/Av = a+b/Rv for Rv = %.2f
         - Interstellar medium transmission for Rv = %.2f and E(B-V) = %.2f.\n
-        """ % (rv, rv, ebmv)
+        """ % (rv, rv, ebmv))
 
         # Create the figure and axes
         ax1 = fig.add_axes([0.06, 0.51, 0.92, 0.42],
@@ -538,11 +539,11 @@ class ExtinctionsPlots(object):
         Expressed as Rlbd-Rv as a function of the inverse wavelength.
         """
         fig = pylab.figure(dpi=self.dpi)
-        print ("Figure %i: CCM law variability (A(lbd)/Av)"
-               % (fig.number)).center(80, '=')
-        print """
+        print(("Figure %i: CCM law variability (A(lbd)/Av)"
+               % (fig.number)).center(80, '='))
+        print("""
         Cardelli extinction law for several values of Rv. This figure express
-        the extinction law variability as a function af Rv.\n"""
+        the extinction law variability as a function af Rv.\n""")
 
         ax = fig.add_axes([0.10, 0.09, 0.9, 0.89],
                           xlabel=r'$\lambda$ [$\AA$]',
@@ -582,10 +583,10 @@ class ExtinctionsPlots(object):
         The figure express the extinction law variability as a function af Rv.
         """
         fig = pylab.figure(dpi=self.dpi)
-        print ("Figure %i: CCM law variability (R(lbd)-Rv)" %
-               (fig.number)).center(80, '=')
-        print """
-        CCM law expressed as R(lbd)-Rv for several values of Rv.\n"""
+        print(("Figure %i: CCM law variability (R(lbd)-Rv)" %
+               (fig.number)).center(80, '='))
+        print("""
+        CCM law expressed as R(lbd)-Rv for several values of Rv.\n""")
 
         # Create the figure and axe
         ax = fig.add_axes([0.10, 0.09, 0.9, 0.89],
@@ -638,12 +639,12 @@ class ExtinctionsPlots(object):
         variabilities can be seen in the IR.
         """
         fig = pylab.figure(dpi=self.dpi)
-        print ("Figure %i: Transmission variability" %
-               (fig.number)).center(80, '=')
-        print """
+        print(("Figure %i: Transmission variability" %
+               (fig.number)).center(80, '='))
+        print("""
         Dust cloud transmission variablitiy as a function of Rv and E(B-V).
         A degeneracy between the Rv and E(B-V) variabilities can be seen
-        in the IR.\n"""
+        in the IR.\n""")
 
         ax = fig.add_axes([0.10, 0.09, 0.9, 0.89],
                           xlabel=r'$\lambda$ [$\AA$]',

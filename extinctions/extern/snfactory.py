@@ -5,8 +5,13 @@ This code comes from the SNfactory ToolBox (ToolBox.Astro.Fetchers)
 """
 
 from datetime import datetime
-import urlparse
 import urllib
+try:
+    import urlparse
+except:
+    urlparse = urllib.parse
+    urllib.quote = urllib.parse.quote
+    urllib.urlopen = urllib.request.quote
 import re
 from astropy.coordinates import SkyCoord
 
@@ -112,10 +117,14 @@ def sfd_ebmv(ra, dec, equinox=2000, obsepoch=None, service='IRSA'):
                      out_csys='Equatorial',
                      out_equinox=equinox)
 
+        try:  # python 2
+            items = query.iteritems()
+        except:  # python 3
+            items = query.items()
         url = urlparse.urlunparse(('http', 'ned.ipac.caltech.edu',
                                    'cgi-bin/nph-calc', '',
                                    '&'.join(['%s=%s' % (i, j)
-                                             for i, j in query.iteritems()]),
+                                             for i, j in items]),
                                    ''))
         html = urllib.urlopen(url).read()
 
@@ -131,14 +140,24 @@ def sfd_ebmv(ra, dec, equinox=2000, obsepoch=None, service='IRSA'):
         query = dict(locstr=urllib.quote('%s %s Equatorial %s' %
                                          (ra.__str__(), dec.__str__(), equinox)))
 
+        try:  # python 2
+            items = query.iteritems()
+        except:  # python 3
+            items = query.items()
         url = urlparse.urlunparse(('http', 'irsa.ipac.caltech.edu',
                                    'cgi-bin/DUST/nph-dust', '',
                                    '&'.join(['%s=%s' % (i, j)
-                                             for i, j in query.iteritems()]),
+                                             for i, j in items]),
                                    ''))
 
         # parse the XML
-        infos = xml_parser(urllib.urlopen(url).read())
+        opened_url = urllib.urlopen(url)
+        if 'read' in dir(opened_url):
+            # python 2
+            infos = xml_parser(opened_url.read())
+        else:
+            # python 3 
+            infos = xml_parser(opened_url)
         if infos is not None:
             # the other 'result' are not in mag
             mwebv = infos['results']['result'][0]['statistics']['refPixelValueSFD']

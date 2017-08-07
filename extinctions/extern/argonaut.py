@@ -4,6 +4,7 @@ From http://argonaut.skymaps.info/usage#function-call.
 With a few modifications to handle large query.
 """
 
+from __future__ import print_function
 import json
 import requests
 
@@ -65,8 +66,8 @@ def query(lon, lat, coordsys='gal', mode='full', limit=500000):
     try:
         req.raise_for_status()
     except requests.exceptions.HTTPError as excep:
-        print 'Response received from Argonaut:'
-        print req.text
+        print('Response received from Argonaut:')
+        print(req.text)
         raise excep
 
     return json.loads(req.text)

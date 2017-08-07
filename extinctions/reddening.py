@@ -1,5 +1,7 @@
 """Get the reddening E(B-V) for a given set of coordinates."""
 
+
+from __future__ import print_function
 import os
 import numpy as np
 from astropy.io import fits
@@ -47,33 +49,33 @@ class Reddening(object):
         pmap = resource_filename('extinctions', 'data/maps.yaml') if pmap is None else pmap
         if pmap is None:
             raise IOError("No maps.yaml found anywehre")
-        print "INFO: Loading the maps from", pmap
+        print("INFO: Loading the maps from", pmap)
         self.maps = yaml.load(open(pmap))
         if loadall:
-            for m in self.maps.keys():
+            for m in self.maps:
                 self._load_maps(cmap=m)
 
     def _load_maps(self, cmap=None):
         lmap = self.map_dir + '/' + os.path.basename(self.maps[cmap]['url'])
         if not os.path.exists(lmap):
-            print " - WARNING: You must download the map %s (%s) in order " % \
-                (os.path.basename(lmap), cmap) + "to use it. Use get_maps to do so."
+            print(" - WARNING: You must download the map %s (%s) in order " %
+                  (os.path.basename(lmap), cmap) + "to use it. Use get_maps to do so.")
             self.maps.pop(cmap)
         elif cmap in ['sfd', 'planck']:
             field = 2 if cmap == 'planck' else 0
             self.loaded_maps[cmap] = self.maps[cmap]
             self.loaded_maps[cmap]['map'] = healpy.read_map(lmap, verbose=False,
                                                             field=field, memmap=True)
-            print ' - ', cmap, "is loaded"
+            print(' - ', cmap, "is loaded")
         elif cmap in ['schlafly', 'green']:
             self.loaded_maps[cmap] = self.maps[cmap]
             self.loaded_maps[cmap]['map'] = fits.getdata(lmap)['ebv']
-            print ' - ', cmap, "is loaded"
+            print(' - ', cmap, "is loaded")
 
     def from_astroquery(self, dustmap='SFD98'):
         """Query IRAS using the astropy/astroquery tools (SFD98 or SF11 maps)."""
         if len(self.ra) >= 2:
-            print "WARNING: This online query is SLOW for several set of coordinates"
+            print("WARNING: This online query is SLOW for several set of coordinates")
         tables = [others.astroquery.get_extinction_table('%.4f %.4f' % (ra, dec))
                   for ra, dec in zip(self.ra, self.dec)]
         if dustmap == 'SFD98':
@@ -84,7 +86,7 @@ class Reddening(object):
     def from_snfactory(self):
         """Query on IRSA or NED using code from the SNfactory ToolBox."""
         if len(self.ra) >= 2:
-            print "WARNING: This online query is SLOW for several set of coordinates"
+            print("WARNING: This online query is SLOW for several set of coordinates")
         return [snfactory.sfd_ebmv(ra, dec) for ra, dec in zip(self.ra, self.dec)]
 
     def from_sncosmo(self):
@@ -169,8 +171,8 @@ def test_ebm(ra, dec, smap=0, nest=False):
     b = coordinates.galactic.b.degree
     theta = (90. - b) * np.pi / 180.
     phi = l * np.pi / 180.
-    print "l, b = %.3f, %.3f" % (l, b)
-    print "theta, phi = %.3f, %.3f" % (theta, phi)
+    print("l, b = %.3f, %.3f" % (l, b))
+    print("theta, phi = %.3f, %.3f" % (theta, phi))
     m = load_map(smap)
 
     # from this code
@@ -184,7 +186,7 @@ def test_ebm(ra, dec, smap=0, nest=False):
         t = t[9]['A_SFD'] / t[9]['A_over_E_B_V_SFD']
     else:
         t = t[9]['A_SandF'] / t[9]['A_over_E_B_V_SandF']
-        print t
+        print(t)
 
     # from SNf code (ned)
     f = snfactory.sfd_ebmv(ra, dec)
@@ -195,9 +197,9 @@ def test_ebm(ra, dec, smap=0, nest=False):
     # from other query
     ebv_sfd = argonaut.query(ra, dec, coordsys='equ', mode='sfd')['EBV_SFD'][0]
 
-    print "\nAll results:"
-    print " - Healpy (lambda/nasa map): %.5f" % ebv
-    print " - Astropy/IrsaDust: %.5f" % t
-    print " - SNf code (irsa or ned): %.5f" % f, f
-    print " - sncosmo (local N/S maps): %.5f" % sn
-    print " - argonaut.skypams: %.5f" % ebv_sfd
+    print("\nAll results:")
+    print(" - Healpy (lambda/nasa map): %.5f" % ebv)
+    print(" - Astropy/IrsaDust: %.5f" % t)
+    print(" - SNf code (irsa or ned): %.5f" % f, f)
+    print(" - sncosmo (local N/S maps): %.5f" % sn)
+    print(" - argonaut.skypams: %.5f" % ebv_sfd)

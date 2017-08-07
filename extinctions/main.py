@@ -1,7 +1,9 @@
 """Main entry points for scripts."""
 
 
+from __future__ import print_function
 import os
+from copy import copy
 import shutil
 import wget
 from argparse import ArgumentParser
@@ -21,18 +23,18 @@ def download(url, out, update=False):
         if update:
             os.remove(local_path)
         else:
-            print " File", local_path, "already exist. Pass!"
+            print(" File", local_path, "already exist. Pass!")
             return
-    print " - %s -> %s" % (url, out)
+    print(" - %s -> %s" % (url, out))
     wget.download(url, out=local_path)
-    print ""
+    print("")
 
 
 def list_maps(mdic):
     """List the available maps from a dictionnary of maps."""
-    print "INFO: Available maps are"
+    print("INFO: Available maps are")
     for j, mm in enumerate(sorted(mdic)):
-        print "       %i: %s (%s) - %s" % (j, mm, mdic[mm]['size'], mdic[mm]['url'])
+        print("       %i: %s (%s) - %s" % (j, mm, mdic[mm]['size'], mdic[mm]['url']))
 
 
 def get_maps(argv=None):
@@ -54,23 +56,23 @@ def get_maps(argv=None):
 
     if args.outdir is not None:
         outdir = os.path.abspath(args.outdir)
-        print "WARNING: Please make sure to add '%s' to your path in order for " % \
-            outdir + "the code to find the maps. Use:"
-        print " export DUSTMAP='%s'" % outdir
-        print " or"
-        print " setenv DUSTMAP '%s'" % outdir
+        print("WARNING: Please make sure to add '%s' to your path in order for " %
+              outdir + "the code to find the maps. Use:")
+        print(" export DUSTMAP='%s'" % outdir)
+        print(" or")
+        print(" setenv DUSTMAP '%s'" % outdir)
     else:
         outdir = os.getenv('HOME') + "/.extinction/maps"
 
     if not os.path.isdir(outdir):
-        print "INFO: Creating output directoy:", outdir
+        print("INFO: Creating output directoy:", outdir)
         os.makedirs(outdir)
     else:
-        print "INFO: output directory used is", outdir
+        print("INFO: output directory used is", outdir)
 
     # Get the maps yaml file
     m = resource_filename('extinctions', 'data/maps.yaml')
-    print "INFO: getting the map list from the local github repository: %s" % m
+    print("INFO: getting the map list from the local github repository: %s" % m)
     shutil.copy2(m, outdir)
 
     # Now get all or part of the maps
@@ -84,25 +86,25 @@ def get_maps(argv=None):
     # Selection by the user?
     if args.select is not None:
         select = args.select.split(',')
-        for m in maps.keys():
+        for m in copy(maps):
             if m not in select:
                 maps.pop(m)
     elif args.exclude is not None:
         exclude = args.exclude.split(',')
-        for m in maps.keys():
+        for m in copy(maps):
             if m in exclude:
                 maps.pop(m)
 
     # Check if some maps are already present
-    for m in maps.keys():
+    for m in copy(maps):
         path = outdir + "/" + os.path.basename(maps[m]['url'])
         if os.path.exists(path):
-            print " File", path, "already exist."
+            print(" File", path, "already exist.")
             maps.pop(m)
 
-    print "INFO: Downloading the following maps:"
+    print("INFO: Downloading the following maps:")
     for i, m in enumerate(sorted(maps)):
-        print "       %i: %s" % (i, m)
+        print("       %i: %s" % (i, m))
 
     for m in sorted(maps):
         download(maps[m]['url'], outdir)
@@ -116,7 +118,7 @@ def extinction_plots(argv=None):
     description = """Plot extinction curves."""
     prog = "extinction_plots.py"
 
-    print "\nUse extinction.py to plot the extinction laws.\n"
+    print("\nUse extinction.py to plot the extinction laws.\n")
 
     parser = ArgumentParser(prog=prog, description=description)
     parser.add_argument("--hide", action='store_true', default=False,
