@@ -8,4 +8,4 @@ requests
 astroquery
 wget
 mock
-healpy==1.9.1
+healpy
