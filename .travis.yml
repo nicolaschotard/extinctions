@@ -8,6 +8,7 @@ cache:
 python:
   # We don't actually use the Travis Python, but this keeps it organized.
   - "2.7"
+
 install:
   - sudo apt-get update
   # We do this conditionally because it saves us some downloading if the
@@ -28,7 +29,7 @@ install:
   
 # command to run tests
 script:
-  - export DISPLAY="Agg"
+  - "export DISPLAY=Agg"
   - get_maps.py --update --exclude planck,green
   - coverage run --source="extinctions" setup.py test
 
